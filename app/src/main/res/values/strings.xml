@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">XinLi</string>
+    <string name="uriceshiClass1">class1ceshi</string>
+    <string name="uriceshiClass2">class2ceshi</string>
+    <string name="uriceshiClass3">class3ceshi</string>
 </resources>
