@@ -3,4 +3,11 @@
     <string name="uriceshiClass1">class1ceshi</string>
     <string name="uriceshiClass2">class2ceshi</string>
     <string name="uriceshiClass3">class3ceshi</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <item name="tag_uri" type="id"></item>
+    <item name="tag_category" type="id"></item>
+
 </resources>

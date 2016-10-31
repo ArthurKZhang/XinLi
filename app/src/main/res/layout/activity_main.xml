@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="vertical">
 
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ViewFlipper>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -14,24 +38,96 @@
                 android:id="@+id/category1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:tag="@string/uriceshiClass1"/>
+                android:text="Love" />
 
             <Button
                 android:id="@+id/category2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:tag="@string/uriceshiClass2"/>
+                android:text="Work" />
 
             <Button
                 android:id="@+id/category3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:tag="@string/uriceshiClass3"/>
+                android:text="Family" />
         </TableRow>
 
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow android:layout_gravity="center">
+
+            <LinearLayout
+                android:id="@+id/recom1"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/recom1_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/recom1_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recom2"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/recom2_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/recom2_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow>
+
+            <LinearLayout
+                android:id="@+id/recom3"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/recom3_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/recom3_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recom4"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/recom4_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/recom4_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </TableRow>
     </TableLayout>
 
 

@@ -5,10 +5,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/tv_description"
-        android:text="this is description field"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <!--android:text="this is description field"-->
 
     <LinearLayout
         android:id="@+id/doTestOptionField"
@@ -18,20 +18,23 @@
 
 
     </LinearLayout>
+
     <Button
         android:id="@+id/bt_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="next"/>
+        android:text="next" />
+
     <Button
         android:id="@+id/bt_previous"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="previous"/>
+        android:text="previous" />
+
     <Button
+        android:id="@+id/bt_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bt_submit"
-        android:text="SUBMIT"/>
+        android:text="SUBMIT" />
 
 </LinearLayout>
