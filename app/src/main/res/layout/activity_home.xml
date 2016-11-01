@@ -27,18 +27,17 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:id="@+id/layout_bottom"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <RadioGroup
                         android:id="@+id/radiogroup"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="bottom"
                         android:gravity="center_horizontal"
                         android:orientation="horizontal">
@@ -49,7 +48,13 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:button="@null"
+                            android:gravity="center"
                             android:text="Test" />
+
+                        <ImageButton
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimaryDark" />
 
                         <RadioButton
                             android:id="@+id/radio_message"
@@ -57,7 +62,13 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:button="@null"
+                            android:gravity="center"
                             android:text="Message" />
+
+                        <ImageButton
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimaryDark" />
 
                         <RadioButton
                             android:id="@+id/radio_mine"
@@ -65,6 +76,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:button="@null"
+                            android:gravity="center"
                             android:text="Mine" />
                     </RadioGroup>
                 </RelativeLayout>

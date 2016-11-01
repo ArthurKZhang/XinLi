@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
+import com.xinli.xinli.R;
 import com.xinli.xinli.bean.Task;
 import com.xinli.xinli.bean.test.Artical;
 import com.xinli.xinli.bean.test.Recommend;
@@ -15,6 +15,7 @@ import com.xinli.xinli.bean.test.TestI;
 import com.xinli.xinli.bean.test.TestLI;
 import com.xinli.xinli.bean.test.VF;
 import com.xinli.xinli.testdao.ArticalDao;
+import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.testdao.RecommendDao;
 import com.xinli.xinli.testdao.TestIDao;
 import com.xinli.xinli.testdao.TestLIDao;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MyService extends Service implements Runnable {
 
@@ -107,6 +107,18 @@ public class MyService extends Service implements Runnable {
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->TESTLIST_GET_DATA");
                 break;
+            case Task.USER_GET_DATA:
+                map = new HashMap<String, Object>();
+                String name = (String) ts.getTaskParam().get("name");
+                String passwd = (String) ts.getTaskParam().get("passwd");
+                String userType = (String) ts.getTaskParam().get("userType");
+
+                Boolean isLoginSuccess = LoginUtil.isLoginSuccess(name,passwd,userType);//为了测试方便
+                map.put("isLoginSuccess", isLoginSuccess);
+                map.put("photo", R.drawable.profile_photo);
+                message.obj = map;
+                Log.d("test", "MyService-->doTask()-->USER_GET_DATA");
+                break;
         }
 
         taskList.remove(ts);
@@ -135,6 +147,9 @@ public class MyService extends Service implements Runnable {
                     break;
                 case Task.TESTLIST_GET_DATA:
                     AppManager.getAppManager().getActivityByName("TestListActivity").refresh(msg.obj);
+                    break;
+                case Task.USER_GET_DATA:
+                    AppManager.getAppManager().getActivityByName("LoginActivity").refresh(msg.obj);
                     break;
             }
         }

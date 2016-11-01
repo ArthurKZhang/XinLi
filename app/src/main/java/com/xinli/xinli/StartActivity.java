@@ -1,6 +1,7 @@
 package com.xinli.xinli;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.xinli.xinli.testdao.RecommendDao;
 import com.xinli.xinli.testdao.TestIDao;
 import com.xinli.xinli.testdao.TestLIDao;
 import com.xinli.xinli.testdao.VFDao;
+import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
 
 public class StartActivity extends AppCompatActivity {
@@ -25,6 +27,8 @@ public class StartActivity extends AppCompatActivity {
         skip = (Button)this.findViewById(R.id.Bt_skip);
 
         launchMasterService();
+
+        checkLogIn();
 
         initDB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +74,21 @@ public class StartActivity extends AppCompatActivity {
         if (!MyService.isMyServiceRun){
             Intent intent = new Intent(this, MyService.class);
             this.startService(intent);
+        }
+    }
+
+    /**
+     * check whether Costumer logged in or not. by check SharedPreferences file "LoginInfo", sp.getBoolean("isLogIn",false);
+     * This method will change the value of <AppManager(instance).isLoggedIn>
+     */
+    private void checkLogIn(){
+        SharedPreferences sp = StartActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
+        boolean isLog = sp.getBoolean("isLogIn",false);
+        if (isLog){
+            AppManager.getAppManager().isLoggedIn = true;
+        }else {
+            AppManager.getAppManager().isLoggedIn = false;
         }
     }
 

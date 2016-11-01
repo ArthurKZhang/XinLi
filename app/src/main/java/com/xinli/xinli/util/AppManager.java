@@ -1,6 +1,7 @@
 package com.xinli.xinli.util;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -17,6 +18,10 @@ public class AppManager {
 
     private static Stack<MyBaseActivity> activityStack;
     private static AppManager instance;
+    /**
+     * 判断app有没有被用户登录
+     */
+    public boolean isLoggedIn;
 
     private AppManager() {
     }
@@ -31,6 +36,7 @@ public class AppManager {
         return instance;
     }
 
+
     /**
      * 添加Activity到堆栈
      */
@@ -38,8 +44,10 @@ public class AppManager {
         if (activityStack == null) {
             activityStack = new Stack<MyBaseActivity>();
         }
-        activityStack.add(activity);
-        Log.d("test", "AppManager-->addActivity\n"+activityStack.toString());
+        if (!activityStack.contains(activity)) {
+            activityStack.add(activity);
+        }
+        Log.d("test", "AppManager-->addActivity\n" + activityStack.toString());
     }
 
     /**
@@ -67,6 +75,7 @@ public class AppManager {
             activity.finish();
             activity = null;
         }
+        Log.d("test", "AppManager-->finishActivity\n" + activityStack.toString());
     }
 
     /**
@@ -126,9 +135,10 @@ public class AppManager {
     public void AppExit(Context context) {
         try {
             finishAllActivity();
-//                ActivityManager activityMgr= (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-//                activityMgr.restartPackage(context.getPackageName());
-            // System.exit(0);
+            ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//            activityMgr.restartPackage(context.getPackageName());
+            activityMgr.killBackgroundProcesses(context.getPackageName());
+            System.exit(0);
         } catch (Exception e) {
         }
     }

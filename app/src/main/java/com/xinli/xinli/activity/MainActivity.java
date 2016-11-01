@@ -1,8 +1,11 @@
 package com.xinli.xinli.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +20,7 @@ import com.xinli.xinli.bean.test.Recommend;
 import com.xinli.xinli.bean.test.VF;
 import com.xinli.xinli.testdao.RecommendDao;
 import com.xinli.xinli.testdao.VFDao;
+import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
 
 import java.util.HashMap;
@@ -236,6 +240,31 @@ public class MainActivity extends MyBaseActivity {
         im4.setImageResource(rs.get(3).img);
         TextView tv4 = (TextView) ll4.findViewById(R.id.recom4_text);
         tv4.setText(rs.get(3).shortdes);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            new AlertDialog.Builder(MainActivity.this).setTitle("Exit App?")
+                    .setMessage("Click \"Exit\" button to exit App")
+                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppManager.getAppManager().AppExit(MainActivity.this);
+                        }
+                    })
+                    .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+                        }
+                    }).show();
+
+//            HomeActivity.this.finish();
+
+        }
+        return false;
+
     }
 
 }
