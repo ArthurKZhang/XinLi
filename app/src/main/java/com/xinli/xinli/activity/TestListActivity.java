@@ -10,16 +10,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.xinli.xinli.R;
-import com.xinli.xinli.adapter.ListViewAdapter;
+import com.xinli.xinli.adapter.TestListViewAdapter;
 import com.xinli.xinli.bean.Task;
-import com.xinli.xinli.bean.TestListItem;
 import com.xinli.xinli.bean.test.TestLI;
 import com.xinli.xinli.testdao.TestLIDao;
 import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +55,7 @@ public class TestListActivity extends MyBaseActivity {
             Toast.makeText(TestListActivity.this, "testLIs is null or empty", Toast.LENGTH_SHORT).show();
         }
 
-        listView.setAdapter(new ListViewAdapter(this, testLIs));
+        listView.setAdapter(new TestListViewAdapter(this, testLIs));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

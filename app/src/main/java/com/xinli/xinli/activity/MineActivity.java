@@ -40,7 +40,7 @@ public class MineActivity extends MyBaseActivity {
      */
     TextView tv_UserName;
     Button bt_testHistory, bt_notificationSetting, bt_exitApp;
-    Button btlogout, btupload, btdownload;
+    Button btlogout, btupload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class MineActivity extends MyBaseActivity {
             addLogoutButton();
 
             if (utype.equals(LoginUtil.TEACHER)) {
-                addUploadTestAndDownloadResultButtons();
+                addUploadTestButtons();
             }
         }
 
@@ -113,13 +113,28 @@ public class MineActivity extends MyBaseActivity {
 
                     break;
                 case R.id.bt_testHistory:
+                    if (!isLogin) {
+                        return;
+                    }
+
+                    if (AppManager.getAppManager().userType == null || AppManager.getAppManager().userType.equals("")) {
+                        Log.e("test", "Click R.id.bt_testHistory-->\nAppManager.getAppManager().userType==null||AppManager.getAppManager().userType.equals(\"\")");
+                        return;
+                    }
+                    Bundle bundle = new Bundle();//usertype
+
+                    bundle.putString("usertype", AppManager.getAppManager().userType);
+                    intent = new Intent(MineActivity.this, HistoryTestActivity.class);
+                    intent.putExtras(bundle);
+                    MineActivity.this.startActivity(intent);
+
                     break;
                 case R.id.bt_notificationSetting:
+                    //
                     break;
                 case R.id.bt_exitApp:
+                    AppManager.getAppManager().AppExit(MineActivity.this);
                     break;
-
-
             }
 
 
@@ -144,7 +159,7 @@ public class MineActivity extends MyBaseActivity {
                     //加载新的Logout选项:
                     addLogoutButton();
                     if (userType.equals(LoginUtil.TEACHER)) {
-                        addUploadTestAndDownloadResultButtons();
+                        addUploadTestButtons();
                     }
                 }
                 break;
@@ -170,33 +185,27 @@ public class MineActivity extends MyBaseActivity {
         LL_UserPart.addView(btlogout);
     }
 
-    private void addUploadTestAndDownloadResultButtons() {
+    private void addUploadTestButtons() {
         btupload = new Button(MineActivity.this);
         btupload.setText("Upload Test");
         btupload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("test","MineActivity-->addUploadTestAndDownloadResultButtons-->btupload.setOnClickListener");
+                Log.d("test", "MineActivity-->addUploadTestAndDownloadResultButtons-->btupload.setOnClickListener");
                 Intent intent = new Intent(MineActivity.this, FileBrowserActivity.class);
-                Log.d("test","MineActivity-->btupload.setOnClickListener"+intent.toString());
+                Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent.toString());
                 MineActivity.this.startActivityForResult(intent, REQUEST_UPLOAD_FILE);
             }
         });
         LL_UserPart.addView(btupload);
 
-        btdownload = new Button(MineActivity.this);
-        btdownload.setText("Download Test Result");
-        btdownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //.........
-            }
-        });
-        LL_UserPart.addView(btdownload);
+
     }
 
     private void logout(View v) {
         AppManager.getAppManager().isLoggedIn = false;
+        AppManager.getAppManager().userName = null;
+        AppManager.getAppManager().userType = null;
         SharedPreferences sp = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear().commit();
@@ -205,7 +214,7 @@ public class MineActivity extends MyBaseActivity {
         IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
         LL_UserPart.removeView(v);
         LL_UserPart.removeView(btupload);
-        LL_UserPart.removeView(btdownload);
+
     }
 
     @Override
@@ -225,8 +234,6 @@ public class MineActivity extends MyBaseActivity {
                             //do nothing
                         }
                     }).show();
-
-//            HomeActivity.this.finish();
 
         }
         return false;

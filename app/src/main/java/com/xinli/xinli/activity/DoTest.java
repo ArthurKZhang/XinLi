@@ -143,6 +143,7 @@ public class DoTest extends MyBaseActivity {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        editor.putString("testuri",testURI);
                                         editor.putString(testURI, resultMap.toString());
                                         editor.commit();
                                     }

@@ -12,6 +12,9 @@ public class Task implements Serializable {
     public static final int ARTICAL_GET_DATA = 3;
     public static final int TESTLIST_GET_DATA = 4;
     public static final int USER_GET_DATA = 5;
+    public static final int TEST_HISTORY_GET_DATA = 6;
+    public static final int UPLOADED_HISTORY_GET_DATA = 7;
+
 
 
     private int taskType;

@@ -53,8 +53,8 @@ public class TestLIDao {
         try {
             for (TestLI tli : tlis) {
                 db.execSQL("INSERT INTO " + DatabaseHelper.TABLE_NAME_TestListI
-                        + " VALUES(null, ?, ?, ?, ?, ?, ?)", new Object[]{tli.uri,
-                        tli.category, tli.img, tli.readn, tli.testn, tli.shortdes});
+                        + " VALUES(null, ?, ?, ?, ?, ?, ?)",
+                        new Object[]{tli.uri, tli.category, tli.img, tli.readn, tli.testn, tli.shortdes});
                 // 带两个参数的execSQL()方法，采用占位符参数？，把参数值放在后面，顺序对应
                 // 一个参数的execSQL()方法中，用户输入特殊字符时需要转义
                 // 使用占位符有效区分了这种情况

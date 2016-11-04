@@ -18,12 +18,12 @@ import java.util.List;
 /**
  * Created by zhangyu on 10/11/16.
  */
-public class ListViewAdapter extends BaseAdapter implements ListAdapter {
+public class TestListViewAdapter extends BaseAdapter implements ListAdapter {
 
     private Context context;
     private List<TestLI> testLIs;
 
-    public ListViewAdapter(Context context, List<TestLI> testLIs) {
+    public TestListViewAdapter(Context context, List<TestLI> testLIs) {
         this.context = context;
         this.testLIs = testLIs;
     }
@@ -89,7 +89,7 @@ public class ListViewAdapter extends BaseAdapter implements ListAdapter {
 //    private Context context;
 //    private LayoutInflater inflater;
 //
-//    public ListViewAdapter(int item, MainActivity mainActivity, ArrayList<Person> data) {
+//    public TestListViewAdapter(int item, MainActivity mainActivity, ArrayList<Person> data) {
 //        this.data = data;
 //        this.context = mainActivity;
 //        this.id = item;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +15,7 @@ import com.xinli.xinli.testdao.TestLIDao;
 import com.xinli.xinli.testdao.VFDao;
 import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
+import com.xinli.xinli.util.NotifyService;
 
 public class StartActivity extends AppCompatActivity {
     Button initDB,skip;
@@ -75,6 +77,9 @@ public class StartActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MyService.class);
             this.startService(intent);
         }
+        if(!NotifyService.isStart){
+            this.startService(new Intent(this,NotifyService.class));
+        }
     }
 
     /**
@@ -86,9 +91,15 @@ public class StartActivity extends AppCompatActivity {
 //        SharedPreferences.Editor editor = sp.edit();
         boolean isLog = sp.getBoolean("isLogIn",false);
         if (isLog){
+            //editor.putString("userName", name).putString("userType", userType).putBoolean("isLogIn", isLoginSuccess)
+//            .putInt("photo", photo);
             AppManager.getAppManager().isLoggedIn = true;
+            AppManager.getAppManager().userName = sp.getString("userName",null);
+            AppManager.getAppManager().userType = sp.getString("userType",null);
+            Log.e("test", "StartActivity-->Person Infos get ready");
         }else {
             AppManager.getAppManager().isLoggedIn = false;
+            Log.e("test", "StartActivity-->not Logged in");
         }
     }
 

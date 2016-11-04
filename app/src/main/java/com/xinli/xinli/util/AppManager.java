@@ -22,6 +22,13 @@ public class AppManager {
      * 判断app有没有被用户登录
      */
     public boolean isLoggedIn;
+    /**
+     * teacher,student
+     */
+    public String userType;
+
+    public String userName;
+
 
     private AppManager() {
     }

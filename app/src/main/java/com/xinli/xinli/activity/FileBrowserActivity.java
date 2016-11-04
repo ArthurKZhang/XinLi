@@ -1,14 +1,14 @@
 package com.xinli.xinli.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xinli.xinli.R;
-import com.xinli.xinli.adapter.FileAdapter;
+import com.xinli.xinli.adapter.FileListAdapter;
 import com.xinli.xinli.util.AppManager;
 
 import java.io.File;
@@ -39,13 +39,17 @@ public class FileBrowserActivity extends MyBaseActivity {
     private String rootPath = "/sdcard/";
     private TextView tv_currentPath;
     private ListView listView;
-    private FileAdapter m_FileAdapter;
+    private FileListAdapter m_FileListAdapter;
 
+    /**
+     * 被选择文件的Uri
+     */
     String selectedFileUri = null;
 
     int choosedItemPosition = -1;
 
     Button bt_ok, bt_cancle;
+
 
     private void getFileDir(String filePath) {
 
@@ -70,8 +74,8 @@ public class FileBrowserActivity extends MyBaseActivity {
                 items.add(file.getName());
                 paths.add(file.getPath());
             }
-            m_FileAdapter = new FileAdapter(this, items, paths);
-            listView.setAdapter(m_FileAdapter);
+            m_FileListAdapter = new FileListAdapter(this, items, paths);
+            listView.setAdapter(m_FileListAdapter);
             listView.setOnItemClickListener(new OnItemClickListener() {
 
                 @Override
@@ -215,8 +219,16 @@ public class FileBrowserActivity extends MyBaseActivity {
                     progressStatus = MAX_PROGRESS*doWork()/data.length;
                     handler.sendEmptyMessage(0x123);
                 }
-                if(progressStatus>=MAX_PROGRESS)
+                if(progressStatus>=MAX_PROGRESS){
+                    //把选择的文件的名字等信息纪录下来
+                    SharedPreferences sharedPreferences = getSharedPreferences("UploadedTest", Context.MODE_APPEND);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("fileName",selectedFileUri);
+                    boolean isSuccess = editor.commit();
+                    Log.d("test","SaveUpload:*"+isSuccess+"*-"+selectedFileUri+"-to UpLoadedTest.xml");
+
                     progressDialog.dismiss();
+                }
             }
         }.start();
     }

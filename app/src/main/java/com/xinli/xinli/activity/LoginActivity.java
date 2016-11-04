@@ -96,8 +96,11 @@ public class LoginActivity extends MyBaseActivity {
                     .putInt("photo", photo);
             editor.commit();
             AppManager.getAppManager().isLoggedIn = isLoginSuccess;
-
-
+            AppManager.getAppManager().userName = name;
+            AppManager.getAppManager().userType = userType;
+            Log.e("test","isLog:"+AppManager.getAppManager().isLoggedIn+
+                    "\nuname:"+AppManager.getAppManager().userName+
+                    "\nutype:"+AppManager.getAppManager().userType);
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("userName", name);

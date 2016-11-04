@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileAdapter extends BaseAdapter {
+public class FileListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private Bitmap icon_backroot;
@@ -30,7 +30,7 @@ public class FileAdapter extends BaseAdapter {
     private List<ViewHolder> viewHolders = new ArrayList<ViewHolder>();
     private Context context;
 
-    public FileAdapter(Context context, List<String> its, List<String> pas) {
+    public FileListAdapter(Context context, List<String> its, List<String> pas) {
 
         this.context = context;
         mInflater = LayoutInflater.from(context);

@@ -2,6 +2,7 @@ package com.xinli.xinli.util;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -17,6 +18,7 @@ import com.xinli.xinli.bean.test.VF;
 import com.xinli.xinli.testdao.ArticalDao;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.testdao.RecommendDao;
+import com.xinli.xinli.testdao.SharedFileHelper;
 import com.xinli.xinli.testdao.TestIDao;
 import com.xinli.xinli.testdao.TestLIDao;
 import com.xinli.xinli.testdao.VFDao;
@@ -119,6 +121,24 @@ public class MyService extends Service implements Runnable {
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->USER_GET_DATA");
                 break;
+            case Task.TEST_HISTORY_GET_DATA:
+                //sharedPreferences
+                map = new HashMap<String, Object>();
+                SharedPreferences sharedPreferences = (SharedPreferences) ts.getTaskParam().get("sharedPreferences");
+                List<Map<String, String>> list = SharedFileHelper.getInstance().loadDidTest(sharedPreferences);
+                map.put("list",list);
+                message.obj = map;
+                Log.d("test", "MyService-->doTask()-->TEST_HISTORY_GET_DATA");
+                break;
+            case Task.UPLOADED_HISTORY_GET_DATA:
+                //sharedPreferences
+                map = new HashMap<String, Object>();
+                SharedPreferences sharedPreferences2 = (SharedPreferences) ts.getTaskParam().get("sharedPreferences");
+                List<Map<String, String>> list2 = SharedFileHelper.getInstance().loadUploadedTest(sharedPreferences2);
+                map.put("list",list2);
+                message.obj = map;
+                Log.d("test", "MyService-->doTask()-->UPLOADED_HISTORY_GET_DATA");
+                break;
         }
 
         taskList.remove(ts);
@@ -150,6 +170,12 @@ public class MyService extends Service implements Runnable {
                     break;
                 case Task.USER_GET_DATA:
                     AppManager.getAppManager().getActivityByName("LoginActivity").refresh(msg.obj);
+                    break;
+                case Task.TEST_HISTORY_GET_DATA:
+                    AppManager.getAppManager().getActivityByName("HistoryTestActivity").refresh(msg.obj);
+                    break;
+                case Task.UPLOADED_HISTORY_GET_DATA:
+                    AppManager.getAppManager().getActivityByName("HistoryTestActivity").refresh(msg.obj);
                     break;
             }
         }
