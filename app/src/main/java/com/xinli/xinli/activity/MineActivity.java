@@ -3,7 +3,14 @@ package com.xinli.xinli.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +32,11 @@ import com.xinli.xinli.R;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.util.AppManager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 
 public class MineActivity extends MyBaseActivity {
 
@@ -34,8 +46,10 @@ public class MineActivity extends MyBaseActivity {
     private int photo;
 
     private final int REQUEST_LOGIN = 1;
-
     private final int REQUEST_UPLOAD_FILE = 2;
+    private final int REQUEST_PHOTO_ALBUM = 3;
+    private final int REQUEST_PHOTO_CAMERA = 4;
+    private final int REQUEST_PHOTO_CORP = 5;
 
     LinearLayout LL_UserPart;
     /**
@@ -48,6 +62,14 @@ public class MineActivity extends MyBaseActivity {
     TextView tv_UserName;
     Button bt_testHistory, bt_notificationSetting, bt_exitApp;
     Button bt_logout, bt_upload;
+    /**
+     * // sd路径
+     */
+    private static String path = "/sdcard/myHead/";
+    /**
+     * // 头像Bitmap
+     */
+    private Bitmap head;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +85,15 @@ public class MineActivity extends MyBaseActivity {
     }
 
     private void setCustomActionBar() {
-        LayoutParams lp =new LayoutParams(
+        LayoutParams lp = new LayoutParams(
                 android.support.v7.app.ActionBar.LayoutParams.MATCH_PARENT,
                 android.support.v7.app.ActionBar.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
         TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
-        textView.setText("Personal Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,20));
+        textView.setText("Personal Yard");
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(AppManager.dip2px(this, 20));
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(mActionBarView, lp);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -90,7 +114,7 @@ public class MineActivity extends MyBaseActivity {
         bt_notificationSetting = (Button) findViewById(R.id.bt_notificationSetting);
         bt_exitApp = (Button) findViewById(R.id.bt_exitApp);
 
-        bt_logout  = (Button) findViewById(R.id.bt_logout);
+        bt_logout = (Button) findViewById(R.id.bt_logout);
         bt_upload = (Button) findViewById(R.id.bt_upload);
 
         MyOnClickListener listener = new MyOnClickListener();
@@ -107,9 +131,23 @@ public class MineActivity extends MyBaseActivity {
             String uname = sp.getString("userName", "Login Please");
             String utype = sp.getString("userType", "");
             name = utype + ": " + uname;
-            photo = sp.getInt("photo", -1);
-            if (photo != -1)
-                IB_UserPhoto.setImageResource(photo);
+//            photo = sp.getInt("photo", -1);
+//            if (photo != -1)
+//                IB_UserPhoto.setImageResource(photo);
+
+            Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从SD卡中找头像，转换成Bitmap
+            if (bt != null) {
+                @SuppressWarnings("deprecation")
+                Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
+                IB_UserPhoto.setImageDrawable(drawable);
+            } else {
+                IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
+                /**
+                 * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
+                 *
+                 */
+            }
+
             tv_UserName.setText(name);
 
             addLogoutButton();
@@ -139,6 +177,7 @@ public class MineActivity extends MyBaseActivity {
                         MineActivity.this.startActivityForResult(intent, REQUEST_LOGIN);
                     } else {
                         //设置新的点击事件,登陆后点击就要换头像了
+                        showTypeDialog();
                     }
 
                     break;
@@ -166,7 +205,7 @@ public class MineActivity extends MyBaseActivity {
                     AppManager.getAppManager().AppExit(MineActivity.this);
                     break;
                 case R.id.bt_logout:
-                    Log.d("test","logout Clicked");
+                    Log.d("test", "logout Clicked");
                     logout();
                     break;
                 case R.id.bt_upload:
@@ -193,7 +232,19 @@ public class MineActivity extends MyBaseActivity {
                 //更新界面
                 if (isLogIn == true) {
                     tv_UserName.setText(userType + ": " + name);
-                    IB_UserPhoto.setImageResource(photo);
+                    Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从SD卡中找头像，转换成Bitmap
+                    if (bt != null) {
+                        @SuppressWarnings("deprecation")
+                        Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
+                        IB_UserPhoto.setImageDrawable(drawable);
+                    } else {
+                        IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
+                        /**
+                         * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
+                         *
+                         */
+                    }
+//                    IB_UserPhoto.setImageResource(photo);
                     MineActivity.this.isLogin = true;
                     //加载新的Logout选项:
                     addLogoutButton();
@@ -208,57 +259,39 @@ public class MineActivity extends MyBaseActivity {
                 Toast.makeText(MineActivity.this, "chose file Uri: " + bundle1.getString("fileUri"),
                         Toast.LENGTH_SHORT).show();
                 break;
+            case REQUEST_PHOTO_ALBUM:
+                if (resultCode == RESULT_OK) {
+                    cropPhoto(data.getData());// 裁剪图片
+                }
+                break;
+            case REQUEST_PHOTO_CAMERA:
+                if (resultCode == RESULT_OK) {
+                    File temp = new File(Environment.getExternalStorageDirectory() + "/head.jpg");
+                    cropPhoto(Uri.fromFile(temp));// 裁剪图片
+                }
+                break;
+            case REQUEST_PHOTO_CORP:
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    head = extras.getParcelable("data");
+                    if (head != null) {
+                        /**
+                         * 上传服务器代码
+                         */
+                        setPicToView(head);// 保存在SD卡中
+                        IB_UserPhoto.setImageBitmap(head);// 用ImageView显示出来
+                    }
+                }
+                break;
         }
     }
 
     private void addLogoutButton() {
-//        btlogout = new Button(MineActivity.this);
-//
-////        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams.getLayoutParams();
-////
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(this,null);
-//        lp.setMargins(0,
-//                AppManager.dip2px(MineActivity.this,10),
-//                0,
-//                0);
-//        btlogout.setLayoutParams(lp);
-//        btlogout.setText("Logout");
-//        btlogout.setBackgroundResource(R.drawable.border_normal);
         bt_logout.setVisibility(View.VISIBLE);
-//        btlogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                logout(v);
-//            }
-//        });
-//        LL_UserPart.addView(btlogout);
     }
 
     private void addUploadTestButtons() {
-//        btupload = new Button(MineActivity.this);
-//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btlogout.getLayoutParams();
-//        lp.setMargins(0,
-//                AppManager.dip2px(MineActivity.this,10),
-//                0,
-//                0);
-//
-//        btupload.setLayoutParams(lp);
-//
-//        btupload.setText("Upload Test");
-//        btupload.setBackgroundResource(R.drawable.border_normal);
         bt_upload.setVisibility(View.VISIBLE);
-//        btupload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d("test", "MineActivity-->addUploadTestAndDownloadResultButtons-->btupload.setOnClickListener");
-//                Intent intent = new Intent(MineActivity.this, FileBrowserActivity.class);
-//                Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent.toString());
-//                MineActivity.this.startActivityForResult(intent, REQUEST_UPLOAD_FILE);
-//            }
-//        });
-//        LL_UserPart.addView(btupload);
-
-
     }
 
     private void logout() {
@@ -272,11 +305,9 @@ public class MineActivity extends MyBaseActivity {
         tv_UserName.setText("Login Please");
         IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
         bt_logout.setVisibility(View.GONE);
-        if(bt_upload.getVisibility()==View.VISIBLE){
+        if (bt_upload.getVisibility() == View.VISIBLE) {
             bt_upload.setVisibility(View.GONE);
         }
-//        LL_UserPart.removeView(v);
-//        LL_UserPart.removeView(btupload);
 
     }
 
@@ -307,8 +338,84 @@ public class MineActivity extends MyBaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_settings);
         item.setVisible(false);
-        item=menu.findItem(R.id.action_refresh);
+        item = menu.findItem(R.id.action_refresh);
         item.setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
+
+    private void showTypeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(this, R.layout.dialog_select_photo, null);
+        TextView tv_select_gallery = (TextView) view.findViewById(R.id.tv_select_gallery);
+        TextView tv_select_camera = (TextView) view.findViewById(R.id.tv_select_camera);
+        tv_select_gallery.setOnClickListener(new View.OnClickListener() {
+            // 在相册中选取
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+                intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent1, REQUEST_PHOTO_ALBUM);
+                dialog.dismiss();
+            }
+        });
+        tv_select_camera.setOnClickListener(new View.OnClickListener() {
+            // 调用照相机
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "head.jpg")));
+                startActivityForResult(intent2, REQUEST_PHOTO_CAMERA);// 采用ForResult打开
+                dialog.dismiss();
+            }
+        });
+        dialog.setView(view);
+        dialog.show();
+    }
+
+    /**
+     * 调用系统的裁剪功能
+     *
+     * @param uri
+     */
+    public void cropPhoto(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, REQUEST_PHOTO_CORP);
+    }
+
+    private void setPicToView(Bitmap mBitmap) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+            return;
+        }
+        FileOutputStream b = null;
+        File file = new File(path);
+        file.mkdirs();// 创建文件夹
+        String fileName = path + "head.jpg";// 图片名字
+        try {
+            b = new FileOutputStream(fileName);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // 关闭流
+                b.flush();
+                b.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

@@ -64,9 +64,6 @@ public class MessageList extends MyBaseActivity {
                             //do nothing
                         }
                     }).show();
-
-//            HomeActivity.this.finish();
-
         }
         return false;
 

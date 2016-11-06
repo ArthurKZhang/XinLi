@@ -43,14 +43,12 @@ public class MainActivity extends MyBaseActivity {
     LinearLayout ll1,ll2,ll3,ll4;
 
     int requestCode = 1;
-//    int[] res = {R.drawable.img1, R.drawable.img2, R.drawable.img3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-//        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setCustomActionBar();
         initViewComponent();
 
@@ -176,7 +174,6 @@ public class MainActivity extends MyBaseActivity {
             bundle.putString("testURI",uri);
             Intent intent = new Intent(MainActivity.this, DoTest.class);
             intent.putExtras(bundle);
-//            startActivity(intent);
             startActivityForResult(intent,requestCode);
         }
     }
@@ -283,9 +280,6 @@ public class MainActivity extends MyBaseActivity {
                             //do nothing
                         }
                     }).show();
-
-//            HomeActivity.this.finish();
-
         }
         return false;
 
