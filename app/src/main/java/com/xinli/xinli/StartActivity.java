@@ -5,9 +5,13 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
+import com.xinli.xinli.activity.MyBaseActivity;
 import com.xinli.xinli.testdao.ArticalDao;
 import com.xinli.xinli.testdao.RecommendDao;
 import com.xinli.xinli.testdao.TestIDao;
@@ -17,12 +21,13 @@ import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
 import com.xinli.xinli.util.NotifyService;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends MyBaseActivity {
     Button initDB,skip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_start);
 
         initDB = (Button) this.findViewById(R.id.Bt_initDB);
@@ -50,6 +55,13 @@ public class StartActivity extends AppCompatActivity {
         });
 
 //        launchMasterService();
+
+        Log.e("test","||"+getSupportActionBar());
+    }
+
+    @Override
+    public void refresh(Object... param) {
+
     }
 
     /**
@@ -101,6 +113,15 @@ public class StartActivity extends AppCompatActivity {
             AppManager.getAppManager().isLoggedIn = false;
             Log.e("test", "StartActivity-->not Logged in");
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_settings);
+        item.setVisible(false);
+        item=menu.findItem(R.id.action_refresh);
+        item.setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
     }
 
 }

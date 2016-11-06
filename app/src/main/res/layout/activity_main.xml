@@ -3,129 +3,193 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:scrollbars="vertical">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:scrollbars="none">
 
 
     <ViewFlipper
         android:id="@+id/viewFlipper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="150dp">
 
         <ImageView
             android:id="@+id/img1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/img2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/img3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
 
     </ViewFlipper>
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
 
         <TableRow android:gravity="center">
 
             <Button
                 android:id="@+id/category1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:text="Love" />
 
             <Button
                 android:id="@+id/category2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:text="Work" />
 
             <Button
                 android:id="@+id/category3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:text="Family" />
+        </TableRow>
+
+        <TableRow android:gravity="center">
+
+            <Button
+                android:id="@+id/category4"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:text="More" />
+
+            <Button
+                android:id="@+id/category5"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:text="More" />
+
+            <Button
+                android:id="@+id/category6"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:text="More" />
         </TableRow>
 
     </TableLayout>
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
 
-        <TableRow android:layout_gravity="center">
+        <TableRow
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:id="@+id/recom1"
                 android:layout_weight="1"
+                android:background="@drawable/border_circle"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/recom1_img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="60dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/recom1_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="哈哈哈"
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/recom2"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border_circle"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/recom2_img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="60dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/recom2_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="哈哈哈"
+                    android:textSize="20dp" />
             </LinearLayout>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:id="@+id/recom3"
                 android:layout_weight="1"
+                android:background="@drawable/border_circle"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/recom3_img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="60dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/recom3_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="哈哈哈"
+                    android:textSize="20dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/recom4"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border_circle"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/recom4_img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="60dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/recom4_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="哈哈哈"
+                    android:textSize="20dp" />
             </LinearLayout>
         </TableRow>
     </TableLayout>

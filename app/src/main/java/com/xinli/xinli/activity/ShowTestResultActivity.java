@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.xinli.xinli.R;
@@ -19,6 +20,7 @@ public class ShowTestResultActivity extends MyBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_show_test_result);
 
         String resultUri = (String) getIntent().getExtras().get("resultUri");

@@ -1,10 +1,16 @@
 package com.xinli.xinli.util;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import com.xinli.xinli.R;
 import com.xinli.xinli.activity.MyBaseActivity;
 
 import java.util.ArrayList;
@@ -149,6 +155,16 @@ public class AppManager {
         } catch (Exception e) {
         }
     }
+
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
 }
 
 

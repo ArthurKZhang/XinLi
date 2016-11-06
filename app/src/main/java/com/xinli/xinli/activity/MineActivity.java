@@ -3,16 +3,23 @@ package com.xinli.xinli.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.support.v7.app.ActionBar.LayoutParams;
 
 import com.xinli.xinli.R;
 import com.xinli.xinli.testdao.LoginUtil;
@@ -40,17 +47,35 @@ public class MineActivity extends MyBaseActivity {
      */
     TextView tv_UserName;
     Button bt_testHistory, bt_notificationSetting, bt_exitApp;
-    Button btlogout, btupload;
+    Button bt_logout, bt_upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        setCustomActionBar();
         setContentView(R.layout.activity_mine_info);
 
         checkLogin();
 
         initViews();
 
+    }
+
+    private void setCustomActionBar() {
+        LayoutParams lp =new LayoutParams(
+                android.support.v7.app.ActionBar.LayoutParams.MATCH_PARENT,
+                android.support.v7.app.ActionBar.LayoutParams.MATCH_PARENT,
+                Gravity.CENTER);
+        View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
+        TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
+        textView.setText("Personal Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,20));
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(mActionBarView, lp);
+        actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     private void checkLogin() {
@@ -65,12 +90,17 @@ public class MineActivity extends MyBaseActivity {
         bt_notificationSetting = (Button) findViewById(R.id.bt_notificationSetting);
         bt_exitApp = (Button) findViewById(R.id.bt_exitApp);
 
+        bt_logout  = (Button) findViewById(R.id.bt_logout);
+        bt_upload = (Button) findViewById(R.id.bt_upload);
+
         MyOnClickListener listener = new MyOnClickListener();
 
         IB_UserPhoto.setOnClickListener(listener);
         bt_testHistory.setOnClickListener(listener);
         bt_notificationSetting.setOnClickListener(listener);
         bt_exitApp.setOnClickListener(listener);
+        bt_logout.setOnClickListener(listener);
+        bt_upload.setOnClickListener(listener);
 
         if (isLogin) {
             SharedPreferences sp = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
@@ -135,6 +165,15 @@ public class MineActivity extends MyBaseActivity {
                 case R.id.bt_exitApp:
                     AppManager.getAppManager().AppExit(MineActivity.this);
                     break;
+                case R.id.bt_logout:
+                    Log.d("test","logout Clicked");
+                    logout();
+                    break;
+                case R.id.bt_upload:
+                    Intent intent1 = new Intent(MineActivity.this, FileBrowserActivity.class);
+                    Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
+                    MineActivity.this.startActivityForResult(intent1, REQUEST_UPLOAD_FILE);
+                    break;
             }
 
 
@@ -173,36 +212,56 @@ public class MineActivity extends MyBaseActivity {
     }
 
     private void addLogoutButton() {
-        btlogout = new Button(MineActivity.this);
-
-        btlogout.setText("Logout");
-        btlogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout(v);
-            }
-        });
-        LL_UserPart.addView(btlogout);
+//        btlogout = new Button(MineActivity.this);
+//
+////        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams.getLayoutParams();
+////
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(this,null);
+//        lp.setMargins(0,
+//                AppManager.dip2px(MineActivity.this,10),
+//                0,
+//                0);
+//        btlogout.setLayoutParams(lp);
+//        btlogout.setText("Logout");
+//        btlogout.setBackgroundResource(R.drawable.border_normal);
+        bt_logout.setVisibility(View.VISIBLE);
+//        btlogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                logout(v);
+//            }
+//        });
+//        LL_UserPart.addView(btlogout);
     }
 
     private void addUploadTestButtons() {
-        btupload = new Button(MineActivity.this);
-        btupload.setText("Upload Test");
-        btupload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("test", "MineActivity-->addUploadTestAndDownloadResultButtons-->btupload.setOnClickListener");
-                Intent intent = new Intent(MineActivity.this, FileBrowserActivity.class);
-                Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent.toString());
-                MineActivity.this.startActivityForResult(intent, REQUEST_UPLOAD_FILE);
-            }
-        });
-        LL_UserPart.addView(btupload);
+//        btupload = new Button(MineActivity.this);
+//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) btlogout.getLayoutParams();
+//        lp.setMargins(0,
+//                AppManager.dip2px(MineActivity.this,10),
+//                0,
+//                0);
+//
+//        btupload.setLayoutParams(lp);
+//
+//        btupload.setText("Upload Test");
+//        btupload.setBackgroundResource(R.drawable.border_normal);
+        bt_upload.setVisibility(View.VISIBLE);
+//        btupload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("test", "MineActivity-->addUploadTestAndDownloadResultButtons-->btupload.setOnClickListener");
+//                Intent intent = new Intent(MineActivity.this, FileBrowserActivity.class);
+//                Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent.toString());
+//                MineActivity.this.startActivityForResult(intent, REQUEST_UPLOAD_FILE);
+//            }
+//        });
+//        LL_UserPart.addView(btupload);
 
 
     }
 
-    private void logout(View v) {
+    private void logout() {
         AppManager.getAppManager().isLoggedIn = false;
         AppManager.getAppManager().userName = null;
         AppManager.getAppManager().userType = null;
@@ -212,8 +271,12 @@ public class MineActivity extends MyBaseActivity {
         this.isLogin = false;
         tv_UserName.setText("Login Please");
         IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
-        LL_UserPart.removeView(v);
-        LL_UserPart.removeView(btupload);
+        bt_logout.setVisibility(View.GONE);
+        if(bt_upload.getVisibility()==View.VISIBLE){
+            bt_upload.setVisibility(View.GONE);
+        }
+//        LL_UserPart.removeView(v);
+//        LL_UserPart.removeView(btupload);
 
     }
 
@@ -238,5 +301,14 @@ public class MineActivity extends MyBaseActivity {
         }
         return false;
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_settings);
+        item.setVisible(false);
+        item=menu.findItem(R.id.action_refresh);
+        item.setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
     }
 }
