@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.xinli.xinli.activity.MyBaseActivity;
 import com.xinli.xinli.testdao.ArticalDao;
@@ -23,6 +24,7 @@ import com.xinli.xinli.util.NotifyService;
 
 public class StartActivity extends MyBaseActivity {
     Button initDB,skip;
+    EditText etInputIP,etInputhost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class StartActivity extends MyBaseActivity {
 
         initDB = (Button) this.findViewById(R.id.Bt_initDB);
         skip = (Button)this.findViewById(R.id.Bt_skip);
+        etInputIP = (EditText) findViewById(R.id.etInputIP);
+        etInputhost = (EditText) findViewById(R.id.etInputhost);
 
         launchMasterService();
 
@@ -47,10 +51,12 @@ public class StartActivity extends MyBaseActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String ip = etInputIP.getText().toString().trim();
+                AppManager.serverIP = ip;
+                AppManager.serverName = etInputhost.getText().toString().trim();
                 Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                 startActivity(intent);
-
-                StartActivity.this.finish();
+                AppManager.getAppManager().finishActivity(StartActivity.this);
             }
         });
 

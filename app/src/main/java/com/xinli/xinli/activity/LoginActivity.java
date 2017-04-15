@@ -78,7 +78,7 @@ public class LoginActivity extends MyBaseActivity {
                 hm.put("passwd", passwd);
                 hm.put("userType", userType);
                 Task ts = new Task(Task.USER_GET_DATA, hm);
-                Log.d("test", "LoginActivity-->submitButton-->Onclick"+name+"@"+passwd+"@"+userType);
+                Log.d("test", "LoginActivity-->submitButton-->Onclick" + name + "@" + passwd + "@" + userType);
                 MyService.newTask(ts);
             }
         });
@@ -87,6 +87,7 @@ public class LoginActivity extends MyBaseActivity {
     @Override
     public void refresh(Object... param) {
         Map<String, Object> map = (Map<String, Object>) param[0];
+        Log.d("test", "LoginActivity-->refresh():map:"+map.toString());
         Boolean isLoginSuccess = (Boolean) map.get("isLoginSuccess");
         int photo = (int) map.get("photo");
         if (isLoginSuccess) {
@@ -100,9 +101,11 @@ public class LoginActivity extends MyBaseActivity {
             AppManager.getAppManager().isLoggedIn = isLoginSuccess;
             AppManager.getAppManager().userName = name;
             AppManager.getAppManager().userType = userType;
-            Log.e("test","isLog:"+AppManager.getAppManager().isLoggedIn+
-                    "\nuname:"+AppManager.getAppManager().userName+
-                    "\nutype:"+AppManager.getAppManager().userType);
+            AppManager._id = (String) map.get("_id");
+
+            Log.e("test", "isLog:" + AppManager.getAppManager().isLoggedIn +
+                    "\nuname:" + AppManager.getAppManager().userName +
+                    "\nutype:" + AppManager.getAppManager().userType);
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("userName", name);
@@ -119,8 +122,9 @@ public class LoginActivity extends MyBaseActivity {
 
     }
 
+
     /**
-     * if not logged in
+     * 按下返回键，这种状态下是没有登录成功的，否则如果登录成功会自行跳转回去。
      *
      * @param keyCode
      * @param event

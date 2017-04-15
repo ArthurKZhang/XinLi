@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:recyclerView="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorRed">
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+
+    <LinearLayout
+        android:id="@+id/myview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--用来记录问题-->
+        <EditText
+            android:id="@+id/comp_quz_quzcontent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="问题描述" />
+        <!--用来选择是什么题目类型，单选／多选／判断／问答-->
+        <RadioGroup
+            android:id="@+id/comp_quz_radiogrp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/comp_quz_rad1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="单选" />
+
+            <RadioButton
+                android:id="@+id/comp_quz_rad2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="多选" />
+
+            <RadioButton
+                android:id="@+id/comp_quz_rad3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="判断" />
+
+            <RadioButton
+                android:id="@+id/comp_quz_rad4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="问答" />
+        </RadioGroup>
+        <!--选项-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/comp_quz_chofield"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            recyclerView:layoutManager="LinearLayoutManager">
+            <!--recyclerView:spanCount="5"-->
+            <!--recyclerView:reverseLayout="false"-->
+            <!--recyclerView:stackFromEnd="false"-->
+
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/comp_quz_addchos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="添加选项" />
+        <!--问答答案输入框-->
+        <EditText
+            android:id="@+id/comp_quz_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="问答题填写答案处" />
+
+        <Button
+            android:id="@+id/deletequz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除这道题" />
+    </LinearLayout>
+
+</FrameLayout>

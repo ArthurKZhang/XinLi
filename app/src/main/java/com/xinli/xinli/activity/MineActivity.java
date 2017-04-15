@@ -31,6 +31,7 @@ import android.support.v7.app.ActionBar.LayoutParams;
 import com.xinli.xinli.R;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.util.AppManager;
+import com.xinli.xinli.util.NotifyService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,6 +51,7 @@ public class MineActivity extends MyBaseActivity {
     private final int REQUEST_PHOTO_ALBUM = 3;
     private final int REQUEST_PHOTO_CAMERA = 4;
     private final int REQUEST_PHOTO_CORP = 5;
+    private final int REQUEST_REGISTER = 6;
 
     LinearLayout LL_UserPart;
     /**
@@ -61,7 +63,7 @@ public class MineActivity extends MyBaseActivity {
      */
     TextView tv_UserName;
     Button bt_testHistory, bt_notificationSetting, bt_exitApp;
-    Button bt_logout, bt_upload;
+    Button bt_logout, bt_upload, bt_register;
     /**
      * // sd路径
      */
@@ -93,7 +95,7 @@ public class MineActivity extends MyBaseActivity {
         TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
         textView.setText("Personal Yard");
         textView.setTextColor(Color.WHITE);
-        textView.setTextSize(AppManager.dip2px(this, 20));
+        textView.setTextSize(AppManager.dip2px(this, 10));
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(mActionBarView, lp);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -117,6 +119,8 @@ public class MineActivity extends MyBaseActivity {
         bt_logout = (Button) findViewById(R.id.bt_logout);
         bt_upload = (Button) findViewById(R.id.bt_upload);
 
+        bt_register = (Button) findViewById(R.id.bt_register);
+
         MyOnClickListener listener = new MyOnClickListener();
 
         IB_UserPhoto.setOnClickListener(listener);
@@ -125,6 +129,7 @@ public class MineActivity extends MyBaseActivity {
         bt_exitApp.setOnClickListener(listener);
         bt_logout.setOnClickListener(listener);
         bt_upload.setOnClickListener(listener);
+        bt_register.setOnClickListener(listener);
 
         if (isLogin) {
             SharedPreferences sp = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
@@ -151,6 +156,8 @@ public class MineActivity extends MyBaseActivity {
             tv_UserName.setText(name);
 
             addLogoutButton();
+            //如果是已登录状态，就隐藏注册button
+            hideRegisterButton();
 
             if (utype.equals(LoginUtil.TEACHER)) {
                 addUploadTestButtons();
@@ -199,7 +206,10 @@ public class MineActivity extends MyBaseActivity {
 
                     break;
                 case R.id.bt_notificationSetting:
-                    //
+                    Intent in = new Intent(MineActivity.this, NotifyService.class);
+                    // 为Intent设置Action属性
+                    in.setAction("com.xinli.xinli.NotifyService");
+                    stopService(in);
                     break;
                 case R.id.bt_exitApp:
                     AppManager.getAppManager().AppExit(MineActivity.this);
@@ -209,9 +219,16 @@ public class MineActivity extends MyBaseActivity {
                     logout();
                     break;
                 case R.id.bt_upload:
-                    Intent intent1 = new Intent(MineActivity.this, FileBrowserActivity.class);
+//                    Intent intent1 = new Intent(MineActivity.this, FileBrowserActivity.class);
+//                    Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
+//                    MineActivity.this.startActivityForResult(intent1, REQUEST_UPLOAD_FILE);
+                    Intent intent1 = new Intent(MineActivity.this, EditExamActivity.class);
                     Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
-                    MineActivity.this.startActivityForResult(intent1, REQUEST_UPLOAD_FILE);
+                    MineActivity.this.startActivity(intent1);
+                    break;
+                case R.id.bt_register:
+                    intent = new Intent(MineActivity.this, RegisterActivity.class);
+                    MineActivity.this.startActivityForResult(intent, REQUEST_REGISTER);
                     break;
             }
 
@@ -248,6 +265,8 @@ public class MineActivity extends MyBaseActivity {
                     MineActivity.this.isLogin = true;
                     //加载新的Logout选项:
                     addLogoutButton();
+                    //登录成功，隐藏register button。当登录成功或者注册成功时
+                    hideRegisterButton();
                     if (userType.equals(LoginUtil.TEACHER)) {
                         addUploadTestButtons();
                     }
@@ -278,12 +297,43 @@ public class MineActivity extends MyBaseActivity {
                         /**
                          * 上传服务器代码
                          */
-                        setPicToView(head);// 保存在SD卡中
+                        savePicToSD(head);// 保存在SD卡中
                         IB_UserPhoto.setImageBitmap(head);// 用ImageView显示出来
                     }
                 }
                 break;
+            case REQUEST_REGISTER:
+                /*
+                bundle.putString("name", name);
+            bundle.putString("identity", identity);
+            bundle.putBoolean("isLogIn", true);
+            bundle.putString("institution",institution);
+                 */
+                Bundle bundleRe = data.getExtras();
+                Boolean isLogInRe = bundleRe.getBoolean("isLogIn");
+
+                //登录成功更新界面
+                if (isLogInRe == true) {
+                    String nameRe = bundleRe.getString("name");
+                    String userTypeRe = bundleRe.getString("identity");
+                    String institution = bundleRe.getString("institution");
+                    tv_UserName.setText(userTypeRe + ": " + nameRe);
+
+                    MineActivity.this.isLogin = true;
+                    //加载新的Logout选项:
+                    addLogoutButton();
+                    //登录成功，隐藏register button。当登录成功或者注册成功时
+                    hideRegisterButton();
+                    if (userTypeRe.equals(LoginUtil.TEACHER)) {
+                        addUploadTestButtons();
+                    }
+                }
+                break;
         }
+    }
+
+    private void hideRegisterButton() {
+        bt_register.setVisibility(View.GONE);
     }
 
     private void addLogoutButton() {
@@ -343,6 +393,7 @@ public class MineActivity extends MyBaseActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+
     private void showTypeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final AlertDialog dialog = builder.create();
@@ -393,7 +444,7 @@ public class MineActivity extends MyBaseActivity {
         startActivityForResult(intent, REQUEST_PHOTO_CORP);
     }
 
-    private void setPicToView(Bitmap mBitmap) {
+    private void savePicToSD(Bitmap mBitmap) {
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return;

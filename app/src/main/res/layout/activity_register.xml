@@ -1,0 +1,93 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_register_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="userName"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/et_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="passwd"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/et_register_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="confirm password"
+            android:inputType="textPassword" />
+
+
+        <RadioGroup
+            android:id="@+id/rg_register_identity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_register_student"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Student" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark" />
+
+            <RadioButton
+                android:id="@+id/rb_register_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="Teacher" />
+        </RadioGroup>
+
+
+        <EditText
+            android:id="@+id/et_register_institution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="组织机构"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/tv_register_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YYYY-MM-DD" />
+
+
+        <!--<DatePicker-->
+        <!--android:id="@+id/dp_register_enrollmentdate"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal" />-->
+
+        <Button
+            android:id="@+id/bt_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Register" />
+    </LinearLayout>
+</ScrollView>

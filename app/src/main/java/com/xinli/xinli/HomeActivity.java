@@ -32,10 +32,11 @@ public class HomeActivity extends TabActivity {
         Log.d("test","--setContentView--done");
 
         tabHost = getTabHost();
-        tabHost.setup();
+//        tabHost.setup();
         tabHost.addTab(tabHost.newTabSpec("test").setIndicator("Test").setContent(new Intent(this, MainActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("message").setIndicator("Message").setContent(new Intent(this, MessageList.class)));
         tabHost.addTab(tabHost.newTabSpec("mine").setIndicator("Mine").setContent(new Intent(this, MineActivity.class)));
+        tabHost.setCurrentTab(0);
 
         radioGroup = (RadioGroup) findViewById(R.id.radiogroup);
         radioGroup.setOnCheckedChangeListener(checkedChangeListener);
@@ -52,7 +53,7 @@ public class HomeActivity extends TabActivity {
 
     }
 
-    private final RadioGroup.OnCheckedChangeListener checkedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+    private RadioGroup.OnCheckedChangeListener checkedChangeListener = new RadioGroup.OnCheckedChangeListener() {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -137,15 +138,22 @@ public class HomeActivity extends TabActivity {
         currentView = tabHost.getCurrentTab();
         if (currentView > beforView) {
             tabHost.getTabContentView().getChildAt(beforView)
-                    .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.animator.left_exit_anim));
+                    .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_exit_anim));//R.animator.left_exit_anim
             tabHost.getCurrentView().
-                    startAnimation(AnimationUtils.loadAnimation(getApplication(), R.animator.right_enter_anim));
+                    startAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_enter_anim));
         }
         if (currentView < beforView) {
-            tabHost.getTabContentView().getChildAt(beforView)
-                    .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.animator.right_exit_anim));
+            Log.e("testt","cur: "+currentView+" || befor: "+beforView);
+            //对bug进行处理，一开始展示的是第一个界面，然后选择第三个界面，这时候缓存里有两个界面，0&1，这时候回到第一个界面，会出现bug，因为找不到第三个——即2缓存
+            if(tabHost.getTabContentView().getChildCount()==2){
+                tabHost.getTabContentView().getChildAt(1)
+                        .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_exit_anim));
+            }else {
+                tabHost.getTabContentView().getChildAt(beforView)
+                        .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.right_exit_anim));
+            }
             tabHost.getCurrentView()
-                    .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.animator.left_enter_anim));
+                    .startAnimation(AnimationUtils.loadAnimation(getApplication(), R.anim.left_enter_anim));
         }
         beforView = currentView;
     }
@@ -153,6 +161,7 @@ public class HomeActivity extends TabActivity {
     private void resetTabColor() {
         int[] temp = {R.id.radio_test, R.id.radio_message, R.id.radio_mine};
         int i = tabHost.getCurrentTab();
+        Log.e("test","tabHost.getCurrentTab()"+i);
         for (int a = 0; a < 3; a++) {
             if (a == i) {
                 HomeActivity.this.findViewById(temp[a]).setBackgroundResource(R.drawable.border_normal2);

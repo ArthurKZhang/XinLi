@@ -34,6 +34,16 @@ public class AppManager {
     public String userType;
 
     public String userName;
+    public static String _id;
+
+    /**
+     * 服务器的IP地址，例如http://192.168.45.2:8080/Test/getjson.action中的192.168.45.2
+     */
+    public static String serverIP;
+    /**
+     * 服务器的应用名称，例如http://192.168.45.2:8080/Test/getjson.action中的Test
+     */
+    public static String serverName = "Test";
 
 
     private AppManager() {
@@ -136,6 +146,7 @@ public class AppManager {
     public MyBaseActivity getActivityByName(String name) {
         for (MyBaseActivity ia : activityStack) {
             if (ia.getClass().getName().indexOf(name) >= 0) {
+                Log.d("test", "AppManager-->getActivityByName()-->"+ia.getClass().getName()+"||"+name);
                 return (MyBaseActivity) ia;
             }
         }

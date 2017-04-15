@@ -33,7 +33,7 @@ public class MessageList extends MyBaseActivity {
                 Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
         TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
-        textView.setText("Message Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,20));
+        textView.setText("Message Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,10));
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(mActionBarView, lp);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -50,11 +50,13 @@ public class MessageList extends MyBaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            final int[] flag = new int[1];
             new AlertDialog.Builder(MessageList.this).setTitle("Exit App?")
                     .setMessage("Click \"Exit\" button to exit App")
                     .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+//                            flag[0] = 1;
                             AppManager.getAppManager().AppExit(MessageList.this);
                         }
                     })
@@ -64,8 +66,10 @@ public class MessageList extends MyBaseActivity {
                             //do nothing
                         }
                     }).show();
+//            if (flag[0]==1)
+//                AppManager.getAppManager().AppExit(MessageList.this);
         }
-        return false;
+        return true;
 
     }
 

@@ -91,6 +91,7 @@ public class FileListAdapter extends BaseAdapter {
                 holder.icon.setImageBitmap(icon_doc);
             }
         }
+
         return convertView;
     }
 

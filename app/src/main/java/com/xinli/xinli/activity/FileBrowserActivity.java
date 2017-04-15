@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.xinli.xinli.R;
 import com.xinli.xinli.adapter.FileListAdapter;
 import com.xinli.xinli.util.AppManager;
+import com.xinli.xinli.util.NotifyService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,8 +95,9 @@ public class FileBrowserActivity extends MyBaseActivity {
                         if (file.isDirectory()) {
                             getFileDir(fileUri);
                         } else {
+                            //FIXME:选定一个item后,再选一个就会有问题,之前的会错位变色,并且会退出activity,然后返回值异常
                             if(choosedItemPosition!=-1){
-//                                Log.e("test",choosedItemPosition+"");
+                                Log.e("test",choosedItemPosition+"");
                                 parent.getChildAt(choosedItemPosition).setBackgroundColor(Color.WHITE);
                             }
                             selectedFileUri = fileUri;
@@ -228,7 +230,7 @@ public class FileBrowserActivity extends MyBaseActivity {
                     editor.putString("fileName",selectedFileUri);
                     boolean isSuccess = editor.commit();
                     Log.d("test","SaveUpload:*"+isSuccess+"*-"+selectedFileUri+"-to UpLoadedTest.xml");
-
+                    NotifyService.shouldSend2Student = true;
                     progressDialog.dismiss();
                 }
             }

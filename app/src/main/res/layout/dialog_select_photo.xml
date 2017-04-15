@@ -8,6 +8,7 @@
         android:id="@+id/tv_select_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_normal"
         android:text="From Album"
         android:textSize="40dp" />
 
@@ -15,6 +16,7 @@
         android:id="@+id/tv_select_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_normal"
         android:text="Use Camera"
         android:textSize="40dp" />
 

@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.xinli.xinli.R;
 import com.xinli.xinli.activity.DoTest;
@@ -20,6 +22,9 @@ public class NotifyService extends Service implements Runnable {
 
     public final int NOTIFICATION_ID = 0x222;
     public static boolean isStart = false;
+
+    public static boolean shouldSend2Student = false;
+    public static boolean shouldSend2Teacher = false;
 
     public NotifyService() {
     }
@@ -59,19 +64,23 @@ public class NotifyService extends Service implements Runnable {
     }
 
     private void doCheck() {
+//        if (sended)
+//            return;
+
         String usertype = AppManager.getAppManager().userType;
-        if (usertype == "student") {
+        if (usertype == "student" && shouldSend2Student) {
             SharedPreferences sharedPreferences = getSharedPreferences("UploadedTest", Context.MODE_PRIVATE);
             String uploadedFileName = sharedPreferences.getString("fileName", null);
             if (uploadedFileName != null)
                 sendNotification(usertype, uploadedFileName);
         }
-        if (usertype == "teacher") {
+        if (usertype == "teacher" && shouldSend2Teacher) {
             SharedPreferences sharedPreferences = getSharedPreferences("submitTestHistory", MODE_PRIVATE);
             String submittedTesturi = sharedPreferences.getString("testuri", null);
-            if (submittedTesturi != null)
-                Log.d("test","Notify##########"+submittedTesturi);
+            if (submittedTesturi != null){
+                Log.d("test", "Notify##########" + submittedTesturi);
                 sendNotification(usertype, submittedTesturi);
+            }
         }
     }
 
@@ -119,11 +128,15 @@ public class NotifyService extends Service implements Runnable {
                 .build();
 
         notificationManager.notify(NOTIFICATION_ID, notification);
+        shouldSend2Teacher = false;
+        shouldSend2Student = false;
     }
 
     @Override
     public void onDestroy() {
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+        Log.e("test","NotifyService --> closed");
+        Toast.makeText(this,"in OnDestory() of NotifyService", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 }

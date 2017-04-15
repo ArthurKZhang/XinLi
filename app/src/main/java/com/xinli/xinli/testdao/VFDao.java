@@ -37,9 +37,9 @@ public class VFDao {
         //initialize data
         List<VF> vfs = new ArrayList<VF>();
         VF v1,v2,v3;
-        v1=  new VF("test/img1", R.drawable.img1);
-        v2=  new VF("test/img2", R.drawable.img2);
-        v3=  new VF("test/img3", R.drawable.img3);
+        v1=  new VF("test/img1", R.drawable.vf_emotion);
+        v2=  new VF("test/img2", R.drawable.vf_emotion_by_gene);
+        v3=  new VF("test/img3", R.drawable.vf_take_your_time);
         vfs.add(v1); vfs.add(v2); vfs.add(v3);
 
 

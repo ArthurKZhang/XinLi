@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,7 +63,7 @@ public class MainActivity extends MyBaseActivity {
                 Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
         TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
-        textView.setText("Test Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,20));
+        textView.setText("Test Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,10));
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(mActionBarView, lp);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -91,9 +92,9 @@ public class MainActivity extends MyBaseActivity {
         * 为ViewFlipper去添加动画效果
         *
         */
-        viewFlipper.setInAnimation(this, R.animator.left_in);
-        viewFlipper.setOutAnimation(this, R.animator.left_out);
-        viewFlipper.setFlipInterval(8000);
+        viewFlipper.setInAnimation(this, R.anim.left_in);
+        viewFlipper.setOutAnimation(this, R.anim.left_out);
+        viewFlipper.setFlipInterval(6000);
         viewFlipper.startFlipping();
 
 
@@ -107,21 +108,21 @@ public class MainActivity extends MyBaseActivity {
 //                        break;
 //                    case MotionEvent.ACTION_MOVE://判断向左滑动还是向右滑动
 //                        if (event.getX() - startX > 100) {
-//                            viewFlipper.setInAnimation(MainActivity.this, R.animator.left_in);
-//                            viewFlipper.setOutAnimation(MainActivity.this, R.animator.left_out);
-//                            viewFlipper.showPrevious();
-//                        } else if (startX - event.getX() > 100) {
 //                            viewFlipper.setInAnimation(MainActivity.this, R.animator.right_in);
 //                            viewFlipper.setOutAnimation(MainActivity.this, R.animator.right_out);
+//                            viewFlipper.showPrevious();
+//                        } else if (startX - event.getX() > 100) {
+//                            viewFlipper.setInAnimation(MainActivity.this, R.animator.left_in);
+//                            viewFlipper.setOutAnimation(MainActivity.this, R.animator.left_out);
 //                            viewFlipper.showNext();
 //                        }
-//
 //                    case MotionEvent.ACTION_UP:
 //                        break;
 //                }
 //                return true;
 //            }
 //        });
+
         viewFlipper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

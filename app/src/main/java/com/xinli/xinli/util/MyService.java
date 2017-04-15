@@ -10,11 +10,19 @@ import android.util.Log;
 
 import com.xinli.xinli.R;
 import com.xinli.xinli.bean.Task;
+import com.xinli.xinli.bean.mine.CLogin;
+import com.xinli.xinli.bean.mine.SLogin;
+import com.xinli.xinli.bean.mine.SRegister;
+import com.xinli.xinli.bean.mine.STeacherPostTest;
 import com.xinli.xinli.bean.test.Artical;
 import com.xinli.xinli.bean.test.Recommend;
 import com.xinli.xinli.bean.test.TestI;
 import com.xinli.xinli.bean.test.TestLI;
 import com.xinli.xinli.bean.test.VF;
+import com.xinli.xinli.net.SimpleCommunicate;
+import com.xinli.xinli.service.LoginWork;
+import com.xinli.xinli.service.RegisterWork;
+import com.xinli.xinli.service.TeacherPostTestWork;
 import com.xinli.xinli.testdao.ArticalDao;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.testdao.RecommendDao;
@@ -68,10 +76,14 @@ public class MyService extends Service implements Runnable {
         }
     }
 
+    /**
+     * task处理函数，根据不同的task type来做相应的处理
+     * @param ts
+     */
     private void doTask(Task ts) {
         Message message = hand.obtainMessage();
         message.what = ts.getTaskType();
-        Log.d("test", "MyService-->doTask()");
+        Log.d("test", "MyService-->doTask():"+ts.getTaskType());
         Map<String, Object> map;
         switch (ts.getTaskType()) {
             case Task.VF_GET_DATA:
@@ -109,17 +121,38 @@ public class MyService extends Service implements Runnable {
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->TESTLIST_GET_DATA");
                 break;
-            case Task.USER_GET_DATA:
+            case Task.USER_GET_DATA://登录
                 map = new HashMap<String, Object>();
                 String name = (String) ts.getTaskParam().get("name");
                 String passwd = (String) ts.getTaskParam().get("passwd");
                 String userType = (String) ts.getTaskParam().get("userType");
 
-                Boolean isLoginSuccess = LoginUtil.isLoginSuccess(name,passwd,userType);//为了测试方便
+                CLogin cLogin = new CLogin((String) ts.getTaskParam().get("name"),
+                        (String) ts.getTaskParam().get("passwd"),
+                        (String) ts.getTaskParam().get("userType"));
+                SLogin sLogin = LoginWork.login(cLogin);
+
+                Boolean isLoginSuccess = false;
+                if (sLogin==null){
+                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin is null");
+                    break;
+                }
+                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin to String:"+sLogin.toString());
+                if (sLogin.getResult()==null){
+                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin is incomplete");
+                    break;
+                }
+                if (sLogin.getResult().equals("success")){
+                    isLoginSuccess = true;
+                }
                 map.put("isLoginSuccess", isLoginSuccess);
+                map.put("result",sLogin.getResult());
+                map.put("_id",sLogin.get_id());
+                map.put("institution",sLogin.getInstitution());
+                map.put("enrollmentDate",sLogin.getEnrollmentDate());
                 map.put("photo", R.drawable.profile_photo);
                 message.obj = map;
-                Log.d("test", "MyService-->doTask()-->USER_GET_DATA");
+                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:map:"+message.obj.toString());
                 break;
             case Task.TEST_HISTORY_GET_DATA:
                 //sharedPreferences
@@ -138,6 +171,24 @@ public class MyService extends Service implements Runnable {
                 map.put("list",list2);
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->UPLOADED_HISTORY_GET_DATA");
+                break;
+            case Task.USER_REGISTER://注册
+                HashMap<String, Object> infos = ts.getTaskParam();
+                //获得注册的服务器回复结果rgresult
+                SRegister rgresult = RegisterWork.register(infos);
+                map = new HashMap<String, Object>();
+                map.put("_id",rgresult.get_id());
+                map.put("result",rgresult.getResult());
+                message.obj = map;
+                Log.d("test", "MyService-->doTask()-->USER_REGISTER");
+                break;
+            case Task.TEACHER_POST_TEST://老师提交试题
+                STeacherPostTest sTeacherPostTest = TeacherPostTestWork.postTest(ts.getTaskParam());
+//                map = new HashMap<String, Object>();
+//                map.put("_id",rgresult.get_id());
+//                map.put("result",rgresult.getResult());
+//                message.obj = map;
+                Log.d("test", "MyService-->doTask()-->TEACHER_POST_TEST");
                 break;
         }
 
@@ -176,6 +227,9 @@ public class MyService extends Service implements Runnable {
                     break;
                 case Task.UPLOADED_HISTORY_GET_DATA:
                     AppManager.getAppManager().getActivityByName("HistoryTestActivity").refresh(msg.obj);
+                    break;
+                case Task.USER_REGISTER:
+                    AppManager.getAppManager().getActivityByName("RegisterActivity").refresh(msg.obj);
                     break;
             }
         }

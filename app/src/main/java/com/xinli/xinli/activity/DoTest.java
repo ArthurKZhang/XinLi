@@ -1,5 +1,6 @@
 package com.xinli.xinli.activity;
 
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import com.xinli.xinli.bean.test.TestI;
 import com.xinli.xinli.testdao.TestIDao;
 import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.MyService;
+import com.xinli.xinli.util.NotifyService;
 import com.xinli.xinli.util.StringTools;
 import com.xinli.xinli.util.TestItemHelper;
 
@@ -150,6 +152,7 @@ public class DoTest extends MyBaseActivity {
                                         editor.commit();
                                     }
                                 }).start();
+                                NotifyService.shouldSend2Teacher = true;
                                 DoTest.this.setResult(resutCode, new Intent().putExtra("DoTestReturn", testURI + "Completed!!"));
                                 AppManager.getAppManager().finishActivity(DoTest.class);
 //                                DoTest.this.f;
