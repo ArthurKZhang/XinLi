@@ -1,16 +1,22 @@
 package com.xinli.xinli.util;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
 import com.xinli.xinli.R;
+import com.xinli.xinli.activity.MineActivity;
 import com.xinli.xinli.bean.Task;
+import com.xinli.xinli.bean.mine.CDownloadPhoto;
 import com.xinli.xinli.bean.mine.CLogin;
+import com.xinli.xinli.bean.mine.CUploadPhoto;
+import com.xinli.xinli.bean.mine.SDownloadPhoto;
 import com.xinli.xinli.bean.mine.SLogin;
 import com.xinli.xinli.bean.mine.SRegister;
 import com.xinli.xinli.bean.mine.STeacherPostTest;
@@ -19,7 +25,9 @@ import com.xinli.xinli.bean.test.Recommend;
 import com.xinli.xinli.bean.test.TestI;
 import com.xinli.xinli.bean.test.TestLI;
 import com.xinli.xinli.bean.test.VF;
+import com.xinli.xinli.net.NetHelper;
 import com.xinli.xinli.net.SimpleCommunicate;
+import com.xinli.xinli.service.DownloadPhotoWork;
 import com.xinli.xinli.service.LoginWork;
 import com.xinli.xinli.service.RegisterWork;
 import com.xinli.xinli.service.TeacherPostTestWork;
@@ -31,6 +39,8 @@ import com.xinli.xinli.testdao.TestIDao;
 import com.xinli.xinli.testdao.TestLIDao;
 import com.xinli.xinli.testdao.VFDao;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +78,7 @@ public class MyService extends Service implements Runnable {
                 doTask(taskList.get(0));
             } else {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (Exception e) {
 
                 }
@@ -87,6 +97,24 @@ public class MyService extends Service implements Runnable {
         Log.d("test", "MyService-->doTask():" + ts.getTaskType());
         Map<String, Object> map = null;
         switch (ts.getTaskType()) {
+//            case Task.PUSH_PHOTO:
+//                CUploadPhoto cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName,null);
+//
+//                String photoid0 = null;
+//                message.obj = photoid0;
+//                Log.d("test", "MyService-->doTask()-->PUSH_PHOTO:pgotoid:" + message.obj.toString());
+//                break;
+            case Task.REQUEST_PHOTO:
+                String photoid = (String) ts.getTaskParam().get("photoid");
+                SDownloadPhoto sDownloadPhoto = DownloadPhotoWork.download(new CDownloadPhoto(photoid));
+                InputStream inputStream = new ByteArrayInputStream(sDownloadPhoto.getPhoto().getBytes());
+                Bitmap bitmap = new ImgHelper().InputStream2Bitmap(inputStream);
+                Log.e("photo","MyService, bitmap is:"+bitmap.toString());
+//                map = new HashMap<>();
+//                map.put("photo",bitmap);
+                message.obj = bitmap;
+//                Log.d("photo", "MyService-->doTask()-->REQUEST_PHOTO:bitmap:" + message.obj.toString());
+                break;
             case Task.VF_GET_DATA:
                 VFDao vfdb = (VFDao) ts.getTaskParam().get("vfdb");
                 List<VF> vfs = vfdb.query();//......
@@ -145,15 +173,15 @@ public class MyService extends Service implements Runnable {
                 }
                 String loginResult = sLogin.getResult();
                 //0 means success
-                if (loginResult.equals("0")){
+                if (loginResult.equals("0")) {
                     isLoginSuccess = true;
                 }
                 //1 means wrong password
-                if(loginResult.equals("1")){
+                if (loginResult.equals("1")) {
 
                 }
                 //-1 means username doesn't exist
-                if(loginResult.equals("-1")){
+                if (loginResult.equals("-1")) {
 
                 }
 
@@ -162,8 +190,8 @@ public class MyService extends Service implements Runnable {
                 map.put("_id", sLogin.get_id());
                 map.put("institution", sLogin.getInstitution());
                 map.put("enrollmentDate", sLogin.getEnrollmentDate());
-                map.put("type",sLogin.getType());
-                map.put("photo", R.drawable.profile_photo);
+                map.put("type", sLogin.getType());
+                map.put("photoid", sLogin.getPhotoid());
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->USER_GET_DATA:map:" + message.obj.toString());
                 break;
@@ -223,6 +251,17 @@ public class MyService extends Service implements Runnable {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+//                case Task.PUSH_PHOTO:
+//                    SharedPreferences sp = getApplicationContext()
+//                            .getSharedPreferences("LoginInfo", MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sp.edit();
+//
+//                    editor.putString("photo", (String) msg.obj);
+//                    break;
+                case Task.REQUEST_PHOTO:
+                    ((MineActivity) AppManager.getAppManager().getActivityByName("MineActivity"))
+                            .savePicToSD((Bitmap) msg.obj);
+                    break;
                 case Task.VF_GET_DATA:
 //                    Log.d("test", "****"+AppManager.getAppManager().getAllActivity().toString());
                     AppManager.getAppManager().getActivityByName("MainActivity").refresh(msg.obj);

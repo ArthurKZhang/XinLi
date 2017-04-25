@@ -1,14 +1,18 @@
 package com.xinli.xinli.activity;
 
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -29,14 +33,21 @@ import android.widget.Toast;
 import android.support.v7.app.ActionBar.LayoutParams;
 
 import com.xinli.xinli.R;
+import com.xinli.xinli.bean.Task;
+import com.xinli.xinli.bean.mine.CUploadPhoto;
+import com.xinli.xinli.bean.mine.SUploadPhoto;
+import com.xinli.xinli.service.UploadPhotoWork;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.util.AppManager;
+import com.xinli.xinli.util.ImgHelper;
+import com.xinli.xinli.util.MyService;
 import com.xinli.xinli.util.NotifyService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 
 public class MineActivity extends MyBaseActivity {
@@ -44,7 +55,7 @@ public class MineActivity extends MyBaseActivity {
     private boolean isLogin;
 
     private String name;
-    private int photo;
+    private String photoid;
 
     private final int REQUEST_LOGIN = 1;
     private final int REQUEST_UPLOAD_FILE = 2;
@@ -79,7 +90,8 @@ public class MineActivity extends MyBaseActivity {
 //        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setCustomActionBar();
         setContentView(R.layout.activity_mine_info);
-
+        path = getApplicationContext().getFilesDir().getPath() + "/myHead/";
+        Log.e("photo", path);
         checkLogin();
 
         initViews();
@@ -136,22 +148,8 @@ public class MineActivity extends MyBaseActivity {
             String uname = sp.getString("userName", "Login Please");
             String utype = sp.getString("userType", "");
             name = utype + ": " + uname;
-//            photo = sp.getInt("photo", -1);
-//            if (photo != -1)
-//                IB_UserPhoto.setImageResource(photo);
 
-            Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从SD卡中找头像，转换成Bitmap
-            if (bt != null) {
-                @SuppressWarnings("deprecation")
-                Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
-                IB_UserPhoto.setImageDrawable(drawable);
-            } else {
-                IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
-                /**
-                 * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
-                 *
-                 */
-            }
+            refreshPhoto(path);
 
             tv_UserName.setText(name);
 
@@ -166,6 +164,46 @@ public class MineActivity extends MyBaseActivity {
 
     }
 
+    /**
+     * change Photo zone
+     */
+    public void refreshPhoto(String photoPath) {
+        String photoid = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE).getString("photo", "no");
+        Log.e("photo","refreshPhoto photoid:"+photoid);
+        if (photoid == null) return;
+        //if photo record exits in shared preference file
+        if (!photoid.equals("no")) {
+            Bitmap bt = BitmapFactory.decodeFile(photoPath + "head.jpg");
+            //如果找到头像，获得头像
+            if (bt != null) {
+                Log.e("photo","bitmap is not null,path:"+photoPath);
+                @SuppressWarnings("deprecation")
+                Drawable drawable = new BitmapDrawable(bt);
+                IB_UserPhoto.setImageDrawable(drawable);
+                return;
+            } else {
+                Log.e("photo","bitmap is null, find photo through server-->requestPhoto("+photoid+")");
+                //如果没有找到头像，网络获得头像
+                requestPhoto(photoid);
+                //TODO 回调saveimage方法
+                return;
+            }
+        }
+        //if photo record doesn't exist in shared preference file
+        if (photoid.equals("no")) {
+            Log.e("photo","photoid is null, set default image");
+            IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
+            return;
+        }
+    }
+
+    private void requestPhoto(String photoId) {
+        HashMap<String, Object> hm = new HashMap<String, Object>();
+        hm.put("photoid", photoId);
+        Task ts = new Task(Task.REQUEST_PHOTO, hm);
+        Log.e("photo", "MineActivity-->after task,request photoid:" + photoId);
+        MyService.newTask(ts);
+    }
 
     @Override
     public void refresh(Object... param) {
@@ -244,24 +282,14 @@ public class MineActivity extends MyBaseActivity {
                 String name = bundle.getString("userName");
                 String userType = bundle.getString("userType");
                 Boolean isLogIn = bundle.getBoolean("isLogIn");
-                int photo = bundle.getInt("photo");
+                String photo = bundle.getString("photo");
 
                 //更新界面
                 if (isLogIn == true) {
                     tv_UserName.setText(userType + ": " + name);
-                    Bitmap bt = BitmapFactory.decodeFile(path + "head.jpg");// 从SD卡中找头像，转换成Bitmap
-                    if (bt != null) {
-                        @SuppressWarnings("deprecation")
-                        Drawable drawable = new BitmapDrawable(bt);// 转换成drawable
-                        IB_UserPhoto.setImageDrawable(drawable);
-                    } else {
-                        IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
-                        /**
-                         * 如果SD里面没有则需要从服务器取头像，取回来的头像再保存在SD中
-                         *
-                         */
-                    }
-//                    IB_UserPhoto.setImageResource(photo);
+
+                    refreshPhoto(path);
+
                     MineActivity.this.isLogin = true;
                     //加载新的Logout选项:
                     addLogoutButton();
@@ -297,8 +325,33 @@ public class MineActivity extends MyBaseActivity {
                         /**
                          * 上传服务器代码
                          */
-                        savePicToSD(head);// 保存在SD卡中
-                        IB_UserPhoto.setImageBitmap(head);// 用ImageView显示出来
+                        new AsyncTask<Void, Void, String>() {
+
+                            @Override
+                            protected String doInBackground(Void... params) {
+                                byte[] headbytes = new ImgHelper().Bitmap2Bytes(head);
+                                CUploadPhoto cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
+                                        , new String(headbytes));
+                                SUploadPhoto sUploadPhoto = UploadPhotoWork.upload(cUploadPhoto);
+                                Log.e("photo","MineActivity->AsyncTask->SUploadPhoto:"+sUploadPhoto.toString());
+                                return sUploadPhoto.getPhotoid();
+                            }
+
+                            @Override
+                            protected void onPostExecute(String s) {
+                                if (s==null){
+                                    Log.e("photo","MineActivity->AsyncTask->photoid is null");
+                                    return;
+                                }
+                                SharedPreferences sp = getApplicationContext()
+                                        .getSharedPreferences("LoginInfo", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+
+                                editor.putString("photo", s);
+                                editor.commit();
+                                savePicToSD(head);// 保存在SD卡中并显示
+                            }
+                        }.execute();
                     }
                 }
                 break;
@@ -444,25 +497,37 @@ public class MineActivity extends MyBaseActivity {
         startActivityForResult(intent, REQUEST_PHOTO_CORP);
     }
 
-    private void savePicToSD(Bitmap mBitmap) {
+    /**
+     * Save photo and refresh photo image
+     *
+     * @param mBitmap
+     */
+    public void savePicToSD(Bitmap mBitmap) {
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return;
         }
-        FileOutputStream b = null;
+        FileOutputStream fileOutputStream = null;
         File file = new File(path);
         file.mkdirs();// 创建文件夹
         String fileName = path + "head.jpg";// 图片名字
         try {
-            b = new FileOutputStream(fileName);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+            fileOutputStream = new FileOutputStream(fileName);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);// 把数据写入文件
+            for (int i = 1; i < 1000; i++) {
+                //空循环保证图片写操作和系统级资源更新完成
+            }
+            Log.i("photo","savePicToSD ready to call refreshPhoto(),path:"+path);
+            refreshPhoto(path);
+            Log.i("photo","savePicToSD after call refreshPhoto(),path:"+path);
         } catch (FileNotFoundException e) {
+            Log.e("photo","savePicToSD exception happened");
             e.printStackTrace();
         } finally {
             try {
                 // 关闭流
-                b.flush();
-                b.close();
+                fileOutputStream.flush();
+                fileOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

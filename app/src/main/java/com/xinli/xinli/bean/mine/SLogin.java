@@ -2,6 +2,7 @@ package com.xinli.xinli.bean.mine;
 
 import java.util.Date;
 
+
 /**
  * Created by zhangyu on 21/02/2017.
  * 属性名	中文	格式	举例	备注
@@ -10,6 +11,7 @@ import java.util.Date;
  * institution	    所在机构	String	USTC
  * enrollmentDate	入学日期	Date	2016-09-01	yyyy-MM-dd
  * type	            身份类型	String	student(或teacher )	只有两种
+ * photoid  String
  */
 public class SLogin {
 
@@ -18,13 +20,15 @@ public class SLogin {
     private String institution;
     private Date enrollmentDate;
     private String type;
+    private String photoid;
 
-    public SLogin(String result, String _id, String institution, Date enrollmentDate, String type) {
+    public SLogin(String result, String _id, String institution, Date enrollmentDate, String type, String photoid) {
         this.result = result;
         this._id = _id;
         this.institution = institution;
         this.enrollmentDate = enrollmentDate;
         this.type = type;
+        this.photoid = photoid;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class SLogin {
                 ", institution='" + institution + '\'' +
                 ", enrollmentDate=" + enrollmentDate +
                 ", type='" + type + '\'' +
+                ", photoid='" + photoid + '\'' +
                 '}';
     }
 
@@ -76,5 +81,13 @@ public class SLogin {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPhotoid() {
+        return photoid;
+    }
+
+    public void setPhotoid(String photoid) {
+        this.photoid = photoid;
     }
 }
