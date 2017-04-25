@@ -68,7 +68,7 @@ public class SimpleCommunicate {
                 Log.e("NETWORK", "POST方式请求成功，result--->" + result);
 //                System.out.println("POST方式请求成功，result--->" + result);
             } else {
-                Log.e("NETWORK", "POST方式请求失败，result--->" + result);
+                Log.e("NETWORK", "POST方式请求失败，result--->" + result+"CODE:"+urlConn.getResponseCode());
                 result = null;
 //                System.out.println("POST方式请求失败");
             }

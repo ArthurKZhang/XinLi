@@ -26,34 +26,34 @@
         android:inputType="textPassword" />
 
 
-    <RadioGroup
-        android:id="@+id/rg_characterChoose"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+    <!--<RadioGroup-->
+        <!--android:id="@+id/rg_characterChoose"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:orientation="horizontal">-->
 
-        <RadioButton
-            android:id="@+id/rb_student"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Student" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/rb_student"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Student" />-->
 
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark" />
+        <!--<ImageView-->
+            <!--android:layout_width="1dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/colorPrimaryDark" />-->
 
-        <RadioButton
-            android:id="@+id/rb_teacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:text="Teacher" />
-    </RadioGroup>
+        <!--<RadioButton-->
+            <!--android:id="@+id/rb_teacher"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:checked="false"-->
+            <!--android:text="Teacher" />-->
+    <!--</RadioGroup>-->
 
     <Button
         android:id="@+id/bt_login"

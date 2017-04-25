@@ -201,7 +201,7 @@ public class HomeActivity extends TabActivity {
 //            HomeActivity.this.finish();
 
         }
-        return false;
+        return true;
 
     }
 }

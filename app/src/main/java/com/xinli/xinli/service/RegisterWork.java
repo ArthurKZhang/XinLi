@@ -38,8 +38,8 @@ public class RegisterWork {
         CRegister cRegister = new CRegister((String) infos.get("name"),
                 (String) infos.get("password"),
                 (String) infos.get("institution"),
-                (String) infos.get("identity"),
-                (Date) infos.get("enrollmentDate"));
+                (Date) infos.get("enrollmentDate"),
+                (String)infos.get("type"));
         String json = gson.toJson(cRegister, ctype);
         //使用POST来提交数据
         String result = SimpleCommunicate.post(url.toString(), json);

@@ -51,9 +51,11 @@ public class StartActivity extends MyBaseActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ip = etInputIP.getText().toString().trim();
-                AppManager.serverIP = ip;
-                AppManager.serverName = etInputhost.getText().toString().trim();
+                if (AppManager.serverIP==null){
+                    String ip = etInputIP.getText().toString().trim();
+                    AppManager.serverIP = ip;
+                    AppManager.serverName = etInputhost.getText().toString().trim();
+                }
                 Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                 startActivity(intent);
                 AppManager.getAppManager().finishActivity(StartActivity.this);

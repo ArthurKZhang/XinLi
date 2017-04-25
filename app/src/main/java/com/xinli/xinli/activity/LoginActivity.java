@@ -25,12 +25,12 @@ import java.util.Map;
 
 public class LoginActivity extends MyBaseActivity {
     EditText et_userName, et_userpasswd;
-    RadioGroup rg_characterChoose;
+//    RadioGroup rg_characterChoose;
     Button bt_login;
-    String name, passwd, userType;
+    String name, passwd,userType;
     final int RESULT_CODE = 1;
-    final int STD_ID = R.id.rb_student;
-    final int TEA_ID = R.id.rb_teacher;
+//    final int STD_ID = R.id.rb_student;
+//    final int TEA_ID = R.id.rb_teacher;
 
 
     @Override
@@ -46,7 +46,7 @@ public class LoginActivity extends MyBaseActivity {
     private void initViews() {
         et_userName = (EditText) findViewById(R.id.et_userName);
         et_userpasswd = (EditText) findViewById(R.id.et_userpasswd);
-        rg_characterChoose = (RadioGroup) findViewById(R.id.rg_characterChoose);
+//        rg_characterChoose = (RadioGroup) findViewById(R.id.rg_characterChoose);
         bt_login = (Button) findViewById(R.id.bt_login);
 
         bt_login.setOnClickListener(new View.OnClickListener() {
@@ -63,22 +63,22 @@ public class LoginActivity extends MyBaseActivity {
                     Toast.makeText(LoginActivity.this, "Must Type in Password!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                int id = rg_characterChoose.getCheckedRadioButtonId();
-                if (id == TEA_ID) {
-                    userType = "teacher";
-                } else if (id == STD_ID) {
-                    userType = "student";
-                } else {//id = -1
-                    Toast.makeText(LoginActivity.this, "Must Choose User Type!!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                int id = rg_characterChoose.getCheckedRadioButtonId();
+//                if (id == TEA_ID) {
+//                    userType = "teacher";
+//                } else if (id == STD_ID) {
+//                    userType = "student";
+//                } else {//id = -1
+//                    Toast.makeText(LoginActivity.this, "Must Choose User Type!!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 HashMap<String, Object> hm = new HashMap<String, Object>();
                 hm.put("name", name);
                 hm.put("passwd", passwd);
-                hm.put("userType", userType);
+//                hm.put("userType", userType);
                 Task ts = new Task(Task.USER_GET_DATA, hm);
-                Log.d("test", "LoginActivity-->submitButton-->Onclick" + name + "@" + passwd + "@" + userType);
+                Log.d("test", "LoginActivity-->submitButton-->Onclick" + name + "@" + passwd );//+ "@" + userType);
                 MyService.newTask(ts);
             }
         });
@@ -87,14 +87,19 @@ public class LoginActivity extends MyBaseActivity {
     @Override
     public void refresh(Object... param) {
         Map<String, Object> map = (Map<String, Object>) param[0];
+        if(map==null || map.isEmpty()){
+            return;
+        }
         Log.d("test", "LoginActivity-->refresh():map:"+map.toString());
         Boolean isLoginSuccess = (Boolean) map.get("isLoginSuccess");
         int photo = (int) map.get("photo");
+        userType = (String) map.get("type");
         if (isLoginSuccess) {
 
             //写文件登录信息文件,SharedPreferences:"LoginInfo"
             SharedPreferences sp = LoginActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
+
             editor.putString("userName", name).putString("userType", userType).putBoolean("isLogIn", isLoginSuccess)
                     .putInt("photo", photo);
             editor.commit();

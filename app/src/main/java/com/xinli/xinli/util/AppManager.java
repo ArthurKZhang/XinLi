@@ -39,7 +39,7 @@ public class AppManager {
     /**
      * 服务器的IP地址，例如http://192.168.45.2:8080/Test/getjson.action中的192.168.45.2
      */
-    public static String serverIP;
+    public static String serverIP = "192.168.3.6";
     /**
      * 服务器的应用名称，例如http://192.168.45.2:8080/Test/getjson.action中的Test
      */

@@ -282,7 +282,7 @@ public class MainActivity extends MyBaseActivity {
                         }
                     }).show();
         }
-        return false;
+        return true;
 
     }
 

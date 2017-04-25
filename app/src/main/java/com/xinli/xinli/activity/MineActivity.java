@@ -315,7 +315,7 @@ public class MineActivity extends MyBaseActivity {
                 //登录成功更新界面
                 if (isLogInRe == true) {
                     String nameRe = bundleRe.getString("name");
-                    String userTypeRe = bundleRe.getString("identity");
+                    String userTypeRe = bundleRe.getString("type");
                     String institution = bundleRe.getString("institution");
                     tv_UserName.setText(userTypeRe + ": " + nameRe);
 
@@ -380,7 +380,7 @@ public class MineActivity extends MyBaseActivity {
                     }).show();
 
         }
-        return false;
+        return true;
 
     }
 

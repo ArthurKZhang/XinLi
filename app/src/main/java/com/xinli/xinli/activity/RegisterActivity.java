@@ -38,7 +38,7 @@ public class RegisterActivity extends MyBaseActivity {
     final int RESULT_CODE_FAIL = 0;
 
     EditText et_register_name, et_register_password, et_register_password2, et_register_institution;
-    RadioGroup rg_register_identity;
+    RadioGroup rg_register_type;
     TextView tv_register_date;
     Button bt_register;
 
@@ -47,7 +47,7 @@ public class RegisterActivity extends MyBaseActivity {
     String name = null;
     String password = null;//暂时没有传给MineActivity
     String institution = null;
-    String identity = null;
+    String type = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class RegisterActivity extends MyBaseActivity {
         et_register_password = (EditText) findViewById(R.id.et_register_password);
         et_register_password2 = (EditText) findViewById(R.id.et_register_password2);//TODO 现在还没有处理
         et_register_institution = (EditText) findViewById(R.id.et_register_institution);
-        rg_register_identity = (RadioGroup) findViewById(R.id.rg_register_identity);
+        rg_register_type = (RadioGroup) findViewById(R.id.rg_register_type);
         tv_register_date = (TextView) findViewById(R.id.tv_register_date);
         bt_register = (Button) findViewById(R.id.bt_register);
 
@@ -96,14 +96,16 @@ public class RegisterActivity extends MyBaseActivity {
                 name = et_register_name.getText().toString().trim();
                 password = et_register_password.getText().toString().trim();
                 institution = et_register_institution.getText().toString().trim();
-                identity = null;
-                int id = rg_register_identity.getCheckedRadioButtonId();
+                type = null;
+                int id = rg_register_type.getCheckedRadioButtonId();
                 if (id == R.id.rb_register_student) {
-                    identity = "student";
+                    type = "student";
                 } else if (id == R.id.rb_register_teacher) {
-                    identity = "teacher";
+                    type = "teacher";
                 } else {
-                    identity = "error";
+//                    type = "error";
+                    Toast.makeText(RegisterActivity.this,"请选择身份类型",Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 Calendar tmp = Calendar.getInstance();
                 tmp.set(myear, mmonth, mday);
@@ -112,7 +114,7 @@ public class RegisterActivity extends MyBaseActivity {
                 infos.put("name", name);
                 infos.put("password", password);
                 infos.put("institution", institution);
-                infos.put("identity", identity);
+                infos.put("type", type);
                 infos.put("enrollmentDate", enrollmentDate);
                 Task ts = new Task(Task.USER_REGISTER, infos);
                 Log.d("test", "RegisterActivity-->RegisterButton-->Onclick" + infos.toString());
@@ -129,8 +131,13 @@ public class RegisterActivity extends MyBaseActivity {
     @Override
     public void refresh(Object... param) {
         Map<String, Object> map = (Map<String, Object>) param[0];
+        if (map==null){
+            Log.e("net error","RegisterActivity->refresh->map is null'");
+            Toast.makeText(RegisterActivity.this,"refresh-map is null",Toast.LENGTH_SHORT).show();
+            return;
+        }
         String _id = (String) map.get("_id");
-        String result = (String) map.get("rsult");
+        String result = (String) map.get("result");
         if (_id == null || result == null) {
             Toast.makeText(RegisterActivity.this, "_id or result is NULL", Toast.LENGTH_LONG).show();
             return;
@@ -143,7 +150,7 @@ public class RegisterActivity extends MyBaseActivity {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("name", name);
-            bundle.putString("identity", identity);
+            bundle.putString("type", type);
             bundle.putBoolean("isLogIn", true);
             bundle.putString("institution", institution);
             //TODO 时间还没有存 Date

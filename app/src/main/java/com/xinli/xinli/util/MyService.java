@@ -78,13 +78,14 @@ public class MyService extends Service implements Runnable {
 
     /**
      * task处理函数，根据不同的task type来做相应的处理
+     *
      * @param ts
      */
     private void doTask(Task ts) {
         Message message = hand.obtainMessage();
         message.what = ts.getTaskType();
-        Log.d("test", "MyService-->doTask():"+ts.getTaskType());
-        Map<String, Object> map;
+        Log.d("test", "MyService-->doTask():" + ts.getTaskType());
+        Map<String, Object> map = null;
         switch (ts.getTaskType()) {
             case Task.VF_GET_DATA:
                 VFDao vfdb = (VFDao) ts.getTaskParam().get("vfdb");
@@ -107,7 +108,7 @@ public class MyService extends Service implements Runnable {
                 break;
             case Task.ARTICAL_GET_DATA:
                 ArticalDao articalDao = (ArticalDao) ts.getTaskParam().get("articaldb");
-                Artical artical = articalDao.queryOneArticalByURI((String)ts.getTaskParam().get("uri"));
+                Artical artical = articalDao.queryOneArticalByURI((String) ts.getTaskParam().get("uri"));
                 map = new HashMap<String, Object>();
                 map.put("artical", artical);
                 message.obj = map;
@@ -128,38 +129,50 @@ public class MyService extends Service implements Runnable {
                 String userType = (String) ts.getTaskParam().get("userType");
 
                 CLogin cLogin = new CLogin((String) ts.getTaskParam().get("name"),
-                        (String) ts.getTaskParam().get("passwd"),
-                        (String) ts.getTaskParam().get("userType"));
+                        (String) ts.getTaskParam().get("passwd"));
+//                        (String) ts.getTaskParam().get("userType"));
                 SLogin sLogin = LoginWork.login(cLogin);
 
                 Boolean isLoginSuccess = false;
-                if (sLogin==null){
-                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin is null");
+                if (sLogin == null) {
+                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:" + "sLogin is null");
                     break;
                 }
-                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin to String:"+sLogin.toString());
-                if (sLogin.getResult()==null){
-                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:"+"sLogin is incomplete");
+                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:" + "sLogin to String:" + sLogin.toString());
+                if (sLogin.getResult() == null) {
+                    Log.d("test", "MyService-->doTask()-->USER_GET_DATA:" + "sLogin is incomplete");
                     break;
                 }
-                if (sLogin.getResult().equals("success")){
+                String loginResult = sLogin.getResult();
+                //0 means success
+                if (loginResult.equals("0")){
                     isLoginSuccess = true;
                 }
+                //1 means wrong password
+                if(loginResult.equals("1")){
+
+                }
+                //-1 means username doesn't exist
+                if(loginResult.equals("-1")){
+
+                }
+
                 map.put("isLoginSuccess", isLoginSuccess);
-                map.put("result",sLogin.getResult());
-                map.put("_id",sLogin.get_id());
-                map.put("institution",sLogin.getInstitution());
-                map.put("enrollmentDate",sLogin.getEnrollmentDate());
+                map.put("result", sLogin.getResult());
+                map.put("_id", sLogin.get_id());
+                map.put("institution", sLogin.getInstitution());
+                map.put("enrollmentDate", sLogin.getEnrollmentDate());
+                map.put("type",sLogin.getType());
                 map.put("photo", R.drawable.profile_photo);
                 message.obj = map;
-                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:map:"+message.obj.toString());
+                Log.d("test", "MyService-->doTask()-->USER_GET_DATA:map:" + message.obj.toString());
                 break;
             case Task.TEST_HISTORY_GET_DATA:
                 //sharedPreferences
                 map = new HashMap<String, Object>();
                 SharedPreferences sharedPreferences = (SharedPreferences) ts.getTaskParam().get("sharedPreferences");
                 List<Map<String, String>> list = SharedFileHelper.getInstance().loadDidTest(sharedPreferences);
-                map.put("list",list);
+                map.put("list", list);
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->TEST_HISTORY_GET_DATA");
                 break;
@@ -168,7 +181,7 @@ public class MyService extends Service implements Runnable {
                 map = new HashMap<String, Object>();
                 SharedPreferences sharedPreferences2 = (SharedPreferences) ts.getTaskParam().get("sharedPreferences");
                 List<Map<String, String>> list2 = SharedFileHelper.getInstance().loadUploadedTest(sharedPreferences2);
-                map.put("list",list2);
+                map.put("list", list2);
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->UPLOADED_HISTORY_GET_DATA");
                 break;
@@ -176,9 +189,13 @@ public class MyService extends Service implements Runnable {
                 HashMap<String, Object> infos = ts.getTaskParam();
                 //获得注册的服务器回复结果rgresult
                 SRegister rgresult = RegisterWork.register(infos);
+                if (rgresult == null) {
+                    Log.d("test", "MyService-->doTask()-->USER_REGISTER->receive null");
+                    break;
+                }
                 map = new HashMap<String, Object>();
-                map.put("_id",rgresult.get_id());
-                map.put("result",rgresult.getResult());
+                map.put("_id", rgresult.get_id());
+                map.put("result", rgresult.getResult());
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->USER_REGISTER");
                 break;

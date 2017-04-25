@@ -9,15 +9,26 @@ public class CRegister {
     private String name;
     private String password;
     private String institution;
-    private String identity;
     private Date enrollmentDate;
+    private String type;
 
-    public CRegister(String name, String password, String institution, String identity, Date enrollmentDate) {
+    public CRegister(String name, String password, String institution, Date enrollmentDate, String type) {
         this.name = name;
         this.password = password;
         this.institution = institution;
-        this.identity = identity;
         this.enrollmentDate = enrollmentDate;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "CRegister{" +
+                "name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", institution='" + institution + '\'' +
+                ", enrollmentDate=" + enrollmentDate +
+                ", type='" + type + '\'' +
+                '}';
     }
 
     public String getName() {
@@ -44,14 +55,6 @@ public class CRegister {
         this.institution = institution;
     }
 
-    public String getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(String identity) {
-        this.identity = identity;
-    }
-
     public Date getEnrollmentDate() {
         return enrollmentDate;
     }
@@ -60,14 +63,11 @@ public class CRegister {
         this.enrollmentDate = enrollmentDate;
     }
 
-    @Override
-    public String toString() {
-        return "CRegister{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", institution='" + institution + '\'' +
-                ", identity='" + identity + '\'' +
-                ", enrollmentDate=" + enrollmentDate +
-                '}';
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
