@@ -3,8 +3,8 @@ package com.xinli.xinli.service;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.xinli.xinli.bean.mine.CRegister;
-import com.xinli.xinli.bean.mine.SRegister;
+import com.xinli.xinli.bean.protocol.CRegister;
+import com.xinli.xinli.bean.protocol.SRegister;
 import com.xinli.xinli.net.SimpleCommunicate;
 import com.xinli.xinli.util.AppManager;
 import com.xinli.xinli.util.Resource;

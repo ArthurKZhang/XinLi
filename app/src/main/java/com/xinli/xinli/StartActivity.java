@@ -86,6 +86,7 @@ public class StartActivity extends MyBaseActivity {
         testIDao.initData();
         articalDao.initData();
         testLIDao.initData();
+
 //        recommendDao
     }
 

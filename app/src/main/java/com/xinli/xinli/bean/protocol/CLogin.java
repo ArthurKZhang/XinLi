@@ -1,4 +1,4 @@
-package com.xinli.xinli.bean.mine;
+package com.xinli.xinli.bean.protocol;
 
 /**
  * Created by zhangyu on 21/02/2017.

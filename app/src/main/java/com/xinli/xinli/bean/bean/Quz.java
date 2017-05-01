@@ -56,7 +56,7 @@ public class Quz {
         this.chooseNum = chooseNum;
     }
 
-    public Object getChooseItems() {
+    public List<String>  getChooseItems() {
         return chooseItems;
     }
 

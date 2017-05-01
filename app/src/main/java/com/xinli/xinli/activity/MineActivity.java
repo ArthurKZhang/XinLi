@@ -1,10 +1,8 @@
 package com.xinli.xinli.activity;
 
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +31,8 @@ import android.support.v7.app.ActionBar.LayoutParams;
 
 import com.xinli.xinli.R;
 import com.xinli.xinli.bean.Task;
-import com.xinli.xinli.bean.mine.CUploadPhoto;
-import com.xinli.xinli.bean.mine.SUploadPhoto;
+import com.xinli.xinli.bean.protocol.CUploadPhoto;
+import com.xinli.xinli.bean.protocol.SUploadPhoto;
 import com.xinli.xinli.service.UploadPhotoWork;
 import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.util.AppManager;
@@ -47,6 +44,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 
@@ -54,7 +52,7 @@ public class MineActivity extends MyBaseActivity {
 
     private boolean isLogin;
 
-    private String name;
+    private String nameAndType;
     private String photoid;
 
     private final int REQUEST_LOGIN = 1;
@@ -147,11 +145,11 @@ public class MineActivity extends MyBaseActivity {
             SharedPreferences sp = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE);
             String uname = sp.getString("userName", "Login Please");
             String utype = sp.getString("userType", "");
-            name = utype + ": " + uname;
+            nameAndType = utype + ": " + uname;
 
             refreshPhoto(path);
 
-            tv_UserName.setText(name);
+            tv_UserName.setText(nameAndType);
 
             addLogoutButton();
             //如果是已登录状态，就隐藏注册button
@@ -168,21 +166,21 @@ public class MineActivity extends MyBaseActivity {
      * change Photo zone
      */
     public void refreshPhoto(String photoPath) {
-        String photoid = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE).getString("photo", "no");
-        Log.e("photo","refreshPhoto photoid:"+photoid);
+        photoid = MineActivity.this.getSharedPreferences("LoginInfo", MODE_PRIVATE).getString("photo", "no");
+        Log.e("photo", "refreshPhoto photoid:" + photoid);
         if (photoid == null) return;
         //if photo record exits in shared preference file
         if (!photoid.equals("no")) {
-            Bitmap bt = BitmapFactory.decodeFile(photoPath + "head.jpg");
+            Bitmap bt = BitmapFactory.decodeFile(photoPath + "head.png");
             //如果找到头像，获得头像
             if (bt != null) {
-                Log.e("photo","bitmap is not null,path:"+photoPath);
+                Log.e("photo", "bitmap is not null,path:" + photoPath);
                 @SuppressWarnings("deprecation")
                 Drawable drawable = new BitmapDrawable(bt);
                 IB_UserPhoto.setImageDrawable(drawable);
                 return;
             } else {
-                Log.e("photo","bitmap is null, find photo through server-->requestPhoto("+photoid+")");
+                Log.e("photo", "bitmap is null, find photo through server-->requestPhoto(" + photoid + ")");
                 //如果没有找到头像，网络获得头像
                 requestPhoto(photoid);
                 //TODO 回调saveimage方法
@@ -191,7 +189,7 @@ public class MineActivity extends MyBaseActivity {
         }
         //if photo record doesn't exist in shared preference file
         if (photoid.equals("no")) {
-            Log.e("photo","photoid is null, set default image");
+            Log.e("photo", "photoid is null, set default image");
             IB_UserPhoto.setImageResource(R.mipmap.ic_launcher);
             return;
         }
@@ -257,12 +255,12 @@ public class MineActivity extends MyBaseActivity {
                     logout();
                     break;
                 case R.id.bt_upload:
-//                    Intent intent1 = new Intent(MineActivity.this, FileBrowserActivity.class);
-//                    Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
-//                    MineActivity.this.startActivityForResult(intent1, REQUEST_UPLOAD_FILE);
-                    Intent intent1 = new Intent(MineActivity.this, EditExamActivity.class);
+                    Intent intent1 = new Intent(MineActivity.this, TeacherTestListActivity.class);
                     Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
                     MineActivity.this.startActivity(intent1);
+//                    Intent intent1 = new Intent(MineActivity.this, EditTestActivity.class);
+//                    Log.d("test", "MineActivity-->btupload.setOnClickListener" + intent1.toString());
+//                    MineActivity.this.startActivity(intent1);
                     break;
                 case R.id.bt_register:
                     intent = new Intent(MineActivity.this, RegisterActivity.class);
@@ -282,7 +280,7 @@ public class MineActivity extends MyBaseActivity {
                 String name = bundle.getString("userName");
                 String userType = bundle.getString("userType");
                 Boolean isLogIn = bundle.getBoolean("isLogIn");
-                String photo = bundle.getString("photo");
+                String photoid = bundle.getString("photo");
 
                 //更新界面
                 if (isLogIn == true) {
@@ -329,18 +327,36 @@ public class MineActivity extends MyBaseActivity {
 
                             @Override
                             protected String doInBackground(Void... params) {
+                                String headString = ImgHelper.bitMapToString2(head);
                                 byte[] headbytes = new ImgHelper().Bitmap2Bytes(head);
-                                CUploadPhoto cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
-                                        , new String(headbytes));
+                                CUploadPhoto cUploadPhoto = null;
+//                                try {
+//                                    cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
+//                                            , new String(headbytes, "UTF-8"));
+                                    cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
+                                            , headString);
+                                    Log.e("UploadPhoto", "userName:" + AppManager.getAppManager().userName);
+                                    Log.e("UploadPhoto", "photo:" + cUploadPhoto.getPhoto());
+//                                } catch (UnsupportedEncodingException e) {
+//                                    e.printStackTrace();
+//                                }
                                 SUploadPhoto sUploadPhoto = UploadPhotoWork.upload(cUploadPhoto);
-                                Log.e("photo","MineActivity->AsyncTask->SUploadPhoto:"+sUploadPhoto.toString());
+                                if (sUploadPhoto == null) {
+                                    Log.e("photo", "MineActivity->AsyncTask->SUploadPhoto: null");
+                                    return "error";
+                                }
+                                Log.e("photo", "MineActivity->AsyncTask->SUploadPhoto:" + sUploadPhoto.toString());
                                 return sUploadPhoto.getPhotoid();
                             }
 
                             @Override
                             protected void onPostExecute(String s) {
-                                if (s==null){
-                                    Log.e("photo","MineActivity->AsyncTask->photoid is null");
+                                if (s.equals("erroe")) {
+                                    Log.e("photo", "MineActivity->AsyncTask->sUploadPhoto is null");
+                                    return;
+                                }
+                                if (s == null) {
+                                    Log.e("photo", "MineActivity->AsyncTask->photoid is null");
                                     return;
                                 }
                                 SharedPreferences sp = getApplicationContext()
@@ -371,6 +387,12 @@ public class MineActivity extends MyBaseActivity {
                     String userTypeRe = bundleRe.getString("type");
                     String institution = bundleRe.getString("institution");
                     tv_UserName.setText(userTypeRe + ": " + nameRe);
+
+                    AppManager.getAppManager().userName = nameRe;
+                    AppManager.getAppManager().userType = userTypeRe;
+                    AppManager.getAppManager().isLoggedIn = isLogInRe;
+                    AppManager.getAppManager().userInstitude = institution;
+
 
                     MineActivity.this.isLogin = true;
                     //加载新的Logout选项:
@@ -503,6 +525,7 @@ public class MineActivity extends MyBaseActivity {
      * @param mBitmap
      */
     public void savePicToSD(Bitmap mBitmap) {
+        if (mBitmap==null) return;
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return;
@@ -510,18 +533,18 @@ public class MineActivity extends MyBaseActivity {
         FileOutputStream fileOutputStream = null;
         File file = new File(path);
         file.mkdirs();// 创建文件夹
-        String fileName = path + "head.jpg";// 图片名字
+        String fileName = path + "head.png";// 图片名字
         try {
             fileOutputStream = new FileOutputStream(fileName);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);// 把数据写入文件
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);// 把数据写入文件
             for (int i = 1; i < 1000; i++) {
                 //空循环保证图片写操作和系统级资源更新完成
             }
-            Log.i("photo","savePicToSD ready to call refreshPhoto(),path:"+path);
+            Log.i("photo", "savePicToSD ready to call refreshPhoto(),path:" + path);
             refreshPhoto(path);
-            Log.i("photo","savePicToSD after call refreshPhoto(),path:"+path);
+            Log.i("photo", "savePicToSD after call refreshPhoto(),path:" + path);
         } catch (FileNotFoundException e) {
-            Log.e("photo","savePicToSD exception happened");
+            Log.e("photo", "savePicToSD exception happened");
             e.printStackTrace();
         } finally {
             try {

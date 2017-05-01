@@ -47,9 +47,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activity.EditExamActivity" />
+        <activity android:name=".activity.EditTestActivity" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.MyTestsActivity"></activity>
+        <activity android:name=".activity.MyTestsActivity" />
+        <activity
+            android:name=".activity.TeacherTestListActivity"
+            android:label="@string/title_activity_upload_test"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.PublishTestActivity"></activity>
     </application>
 
 </manifest>

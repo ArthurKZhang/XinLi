@@ -8,6 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <EditText
+            android:id="@+id/et_testName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="输入测试题的名字"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/id_recyclerview"
@@ -33,20 +38,20 @@
                 android:layout_height="wrap_content"
                 android:text="delete" />
             <Button
-                android:id="@+id/getinfos"
+                android:id="@+id/bt_saveAsNew"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GetInfos"/>
+                android:text="保存为新试题"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/justfortest"
-            android:layout_width="match_parent"
-            android:layout_height="312dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/justfortest"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="312dp" />-->
         <Button
-            android:id="@+id/bttijiao"
+            android:id="@+id/bt_saveEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="提交"/>
+            android:text="保存更改"/>
 
     </LinearLayout>
 

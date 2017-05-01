@@ -12,6 +12,7 @@ import com.xinli.xinli.util.AppManager;
  * Created by zhangyu on 10/29/16.
  */
 public abstract class MyBaseActivity extends AppCompatActivity {
+    String LogTag = this.getClass().getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

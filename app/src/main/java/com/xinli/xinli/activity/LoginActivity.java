@@ -92,7 +92,7 @@ public class LoginActivity extends MyBaseActivity {
         }
         Log.d("test", "LoginActivity-->refresh():map:"+map.toString());
         Boolean isLoginSuccess = (Boolean) map.get("isLoginSuccess");
-        String photo = (String) map.get("photoid");
+        String photoid = (String) map.get("photoid");
 //        map.put("photo", R.drawable.profile_photo);
         userType = (String) map.get("type");
         if (isLoginSuccess) {
@@ -102,7 +102,7 @@ public class LoginActivity extends MyBaseActivity {
             SharedPreferences.Editor editor = sp.edit();
 
             editor.putString("userName", name).putString("userType", userType).putBoolean("isLogIn", isLoginSuccess)
-                    .putString("photo", photo);
+                    .putString("photo", photoid);
             editor.commit();
             AppManager.getAppManager().isLoggedIn = isLoginSuccess;
             AppManager.getAppManager().userName = name;
@@ -117,7 +117,7 @@ public class LoginActivity extends MyBaseActivity {
             bundle.putString("userName", name);
             bundle.putString("userType", userType);
             bundle.putBoolean("isLogIn", isLoginSuccess);
-            bundle.putString("photo", photo);
+            bundle.putString("photo", photoid);
 
             intent.putExtras(bundle);
             LoginActivity.this.setResult(RESULT_CODE, intent);
@@ -149,13 +149,7 @@ public class LoginActivity extends MyBaseActivity {
             intent.putExtras(bundle);
             LoginActivity.this.setResult(RESULT_CODE, intent);
             AppManager.getAppManager().finishActivity(LoginActivity.this);
-
         }
-
-
         return false;
-
     }
-
-
 }

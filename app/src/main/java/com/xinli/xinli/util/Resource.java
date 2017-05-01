@@ -6,9 +6,15 @@ package com.xinli.xinli.util;
 public class Resource {
     public static final String ACTION_REGISTER = "register.action";
     public static final String ACTION_LOGIN = "login.action";
-    public static final String ACTION_TEACHER_POST_TEST = "uploadtest.action";
+
     public static final String ACTION_REQUEST_PHOTO = "photo.action";
     public static final String ACTION_UPLOAD_PHOTO = "uploadphoto.action";
+
+    public static final String ACTION_DOWN_TEACHER_TEST_LIST = "downTeacherTestList.action";
+    public static final String ACTION_TEACHER_POST_TEST = "uploadtest.action";
+    public static final String ACTION_PUBLISH_TEST = "publish.action";
+    public static final String ACTION_TEA_TEST_CACHE = "downcache.action";
+
 
 
     //file resource

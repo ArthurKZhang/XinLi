@@ -10,12 +10,33 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 public class ImgHelper {
+    /**
+     * string转成bitmap
+     *
+     * @param st
+     */
+    public static Bitmap stringToBitMap2(String st) {
+        Bitmap bitmap = null;
+        byte[] bitmapArray;
+        bitmapArray = Base64.decode(st, Base64.DEFAULT);
+        bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                bitmapArray.length);
+        return bitmap;
+    }
+    public static String bitMapToString2(Bitmap bitmap)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] appicon = baos.toByteArray();// 转为byte数组
+        return Base64.encodeToString(appicon, Base64.DEFAULT);
+    }
 
 
     // 将byte[]转换成InputStream

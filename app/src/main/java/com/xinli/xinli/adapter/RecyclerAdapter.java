@@ -9,11 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.xinli.xinli.R;
+import com.xinli.xinli.bean.bean.Quz;
+import com.xinli.xinli.bean.bean.Test;
 import com.xinli.xinli.ui.DividerGridItemDecoration;
 
 import java.util.ArrayList;
@@ -26,17 +30,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     private Context contex;
 
-    private List<String> mDatas;
+    private List<Quz> quzs;
     private LayoutInflater mInflater;
+    private String testName;
+    private boolean flag;
 
-//    RecyclerChosAdapter adapter;// = new RecyclerChosAdapter(contex, new ArrayList<String>());
+    /**
+     * 标记，表示是否是 重新编辑试题，如果是重新编辑，那么设为true
+     */
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
-    public RecyclerAdapter(Context context, List<String> datas) {
+
+    public RecyclerAdapter(Context context, Test test) {
         contex = context;
-
-//        adapter = new RecyclerChosAdapter(contex, new ArrayList<String>());不能在这里创建
+        this.testName = test.getTestName();
         mInflater = LayoutInflater.from(context);
-        mDatas = datas;
+        quzs = test.getQuzs();
+        if (quzs == null) {
+            quzs = new ArrayList<Quz>();
+            testName = "";
+        }
     }
 
     public interface OnItemClickLitener {
@@ -56,22 +71,67 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final MyViewHolder holder = new MyViewHolder(mInflater.inflate(R.layout.item_home, parent, false));
 
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+
         RecyclerView rv = (RecyclerView) holder.quzView.findViewById(R.id.comp_quz_chofield);
-        final RecyclerChosAdapter adapter = new RecyclerChosAdapter(contex, new ArrayList<String>());
-        rv.setAdapter(adapter);//TODO
+
+        //TODO 进入再次编辑功能。需要将传进来的数据 填充到一个个的holder里面
+        Quz quz = null;
+        List<String> chooseItems = null;
+        if (quzs!=null){
+            quz = quzs.get(position);
+            chooseItems = quz.getChooseItems();
+        }
+        if (flag) {
+            EditText quzContent = (EditText) holder.quzView.findViewById(R.id.comp_quz_quzcontent);
+            RecyclerView chosesView = (RecyclerView) holder.quzView.findViewById(R.id.comp_quz_chofield);
+            String content = quz.getQuzContent();
+            quzContent.setText(content);
+            RadioGroup radioGroup = (RadioGroup) holder.quzView.findViewById(R.id.comp_quz_radiogrp);
+            int choType = quz.getType();
+            switch (choType) {
+                case 1:
+                    radioGroup.check(R.id.comp_quz_rad1);
+                    break;
+                case 2:
+                    radioGroup.check(R.id.comp_quz_rad2);
+                    break;
+                case 3:
+                    radioGroup.check(R.id.comp_quz_rad3);
+                    break;
+                case 4:
+                    radioGroup.check(R.id.comp_quz_rad4);
+                    break;
+            }
+            if (choType == 4) {
+                chosesView.setVisibility(View.GONE);
+            }
+
+        }
+        final RecyclerChosAdapter adapter = new RecyclerChosAdapter(contex, chooseItems);
+        final RecyclerChosAdapter adapter2 = new RecyclerChosAdapter(contex, new ArrayList<String>());
+        if (!flag){
+            rv.setAdapter(adapter2);//TODO
+        }else {
+            rv.setAdapter(adapter);//TODO
+        }
         rv.addItemDecoration(new DividerGridItemDecoration(contex));
         // 设置item动画
         rv.setItemAnimator(new DefaultItemAnimator());
 
         //设置RadioButton的监听，如果是问答题的话，隐藏选项框和添加选项按钮
-        RadioButton rb = (RadioButton)holder.quzView.findViewById(R.id.comp_quz_rad4);
+        RadioButton rb = (RadioButton) holder.quzView.findViewById(R.id.comp_quz_rad4);
         rb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    holder.quzView.findViewById(R.id.comp_quz_chofield).setVisibility(View.INVISIBLE);
-                    holder.quzView.findViewById(R.id.comp_quz_addchos).setVisibility(View.INVISIBLE);
-                }else {
+                if (isChecked) {
+                    holder.quzView.findViewById(R.id.comp_quz_chofield).setVisibility(View.GONE);
+                    holder.quzView.findViewById(R.id.comp_quz_addchos).setVisibility(View.GONE);
+                } else {
                     holder.quzView.findViewById(R.id.comp_quz_chofield).setVisibility(View.VISIBLE);
                     holder.quzView.findViewById(R.id.comp_quz_addchos).setVisibility(View.VISIBLE);
                 }
@@ -82,32 +142,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.quzView.findViewById(R.id.comp_quz_addchos).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int count = adapter.getItemCount();
-                Toast.makeText(contex, "" + count, Toast.LENGTH_SHORT).show();
-                adapter.addData(count);
-
+                if (!flag){
+                    int count = adapter2.getItemCount();
+                    adapter2.addData(count);
+                }else {
+                    int count = adapter.getItemCount();
+                    adapter.addData(count);
+                }
             }
         });
-
-        return holder;
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
-//        holder.tv.setText(mDatas.get(position));
-//        holder.quzView.setTag(position);
-//        //设置添加选项按钮的监听事件
-//        holder.quzView.findViewById(R.id.comp_quz_addchos).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int count = adapter.getItemCount();
-//                Toast.makeText(contex,""+count,Toast.LENGTH_SHORT).show();
-//                adapter.addData(count);
-//
-//            }
-//        });
-
-
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null) {
             //holder.itemView.
@@ -133,16 +176,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return mDatas.size();
+        return quzs.size();
     }
 
     public void addData(int position) {
-        mDatas.add(position, "Insert One");
+        quzs.add(position, new Quz());
         notifyItemInserted(position);
     }
 
     public void removeData(int position) {
-        mDatas.remove(position);
+        quzs.remove(position);
         notifyItemRemoved(position);
     }
 

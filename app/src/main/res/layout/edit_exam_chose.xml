@@ -12,20 +12,20 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/edit_exam_chose_num"
+            android:id="@+id/edit_quz_chose_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0" />
 
         <EditText
-            android:id="@+id/edit_exam_chose_edittext"
+            android:id="@+id/edit_quz_chose_edittext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.00"
             android:text="选项描述" />
 
         <Button
-            android:id="@+id/edit_exam_chose_dele_bt"
+            android:id="@+id/edit_quz_chose_dele_bt"
             android:layout_width="38dp"
             android:layout_height="wrap_content"
             android:background="@color/colorRed"

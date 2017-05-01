@@ -3,8 +3,8 @@ package com.xinli.xinli.service;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.xinli.xinli.bean.mine.CDownloadPhoto;
-import com.xinli.xinli.bean.mine.SDownloadPhoto;
+import com.xinli.xinli.bean.protocol.CDownloadPhoto;
+import com.xinli.xinli.bean.protocol.SDownloadPhoto;
 import com.xinli.xinli.net.NetHelper;
 import com.xinli.xinli.net.SimpleCommunicate;
 import com.xinli.xinli.util.Resource;
@@ -18,7 +18,7 @@ public class DownloadPhotoWork {
 
     public static SDownloadPhoto download(CDownloadPhoto infos) {
 
-        Log.d("test", "LoginWork-->login()-->infos:" + infos.toString());
+        Log.d("test", "DownloadPhotoWork-->download()-->infos:" + infos.toString());
         String url = NetHelper.createURL(Resource.ACTION_REQUEST_PHOTO);
 
         Gson gson = new Gson();

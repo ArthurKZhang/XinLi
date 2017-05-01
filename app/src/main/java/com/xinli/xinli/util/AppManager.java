@@ -34,6 +34,7 @@ public class AppManager {
     public String userType;
 
     public String userName;
+    public String userInstitude;
     public static String _id;
 
     /**

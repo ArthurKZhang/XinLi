@@ -1,6 +1,5 @@
 package com.xinli.xinli.util;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,29 +9,24 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import com.xinli.xinli.R;
 import com.xinli.xinli.activity.MineActivity;
 import com.xinli.xinli.bean.Task;
-import com.xinli.xinli.bean.mine.CDownloadPhoto;
-import com.xinli.xinli.bean.mine.CLogin;
-import com.xinli.xinli.bean.mine.CUploadPhoto;
-import com.xinli.xinli.bean.mine.SDownloadPhoto;
-import com.xinli.xinli.bean.mine.SLogin;
-import com.xinli.xinli.bean.mine.SRegister;
-import com.xinli.xinli.bean.mine.STeacherPostTest;
+import com.xinli.xinli.bean.protocol.CDownloadPhoto;
+import com.xinli.xinli.bean.protocol.CLogin;
+import com.xinli.xinli.bean.protocol.SDownloadPhoto;
+import com.xinli.xinli.bean.protocol.SLogin;
+import com.xinli.xinli.bean.protocol.SRegister;
+import com.xinli.xinli.bean.protocol.STeacherPostTest;
 import com.xinli.xinli.bean.test.Artical;
 import com.xinli.xinli.bean.test.Recommend;
 import com.xinli.xinli.bean.test.TestI;
 import com.xinli.xinli.bean.test.TestLI;
 import com.xinli.xinli.bean.test.VF;
-import com.xinli.xinli.net.NetHelper;
-import com.xinli.xinli.net.SimpleCommunicate;
 import com.xinli.xinli.service.DownloadPhotoWork;
 import com.xinli.xinli.service.LoginWork;
 import com.xinli.xinli.service.RegisterWork;
-import com.xinli.xinli.service.TeacherPostTestWork;
+import com.xinli.xinli.service.TeaPostTestWork;
 import com.xinli.xinli.testdao.ArticalDao;
-import com.xinli.xinli.testdao.LoginUtil;
 import com.xinli.xinli.testdao.RecommendDao;
 import com.xinli.xinli.testdao.SharedFileHelper;
 import com.xinli.xinli.testdao.TestIDao;
@@ -41,6 +35,7 @@ import com.xinli.xinli.testdao.VFDao;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,9 +102,33 @@ public class MyService extends Service implements Runnable {
             case Task.REQUEST_PHOTO:
                 String photoid = (String) ts.getTaskParam().get("photoid");
                 SDownloadPhoto sDownloadPhoto = DownloadPhotoWork.download(new CDownloadPhoto(photoid));
-                InputStream inputStream = new ByteArrayInputStream(sDownloadPhoto.getPhoto().getBytes());
-                Bitmap bitmap = new ImgHelper().InputStream2Bitmap(inputStream);
-                Log.e("photo","MyService, bitmap is:"+bitmap.toString());
+                Log.e("test5", "\n");
+                Log.e("test5", sDownloadPhoto.toString());
+                InputStream inputStream = null;
+                try {
+                    System.out.println(sDownloadPhoto.getPhoto());
+                    inputStream = new ByteArrayInputStream(sDownloadPhoto.getPhoto().getBytes("UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = ImgHelper.stringToBitMap2(sDownloadPhoto.getPhoto());
+                if (bitmap != null) {
+                    System.out.println("Method 2 return bitmap is not null");
+                } else {
+                    System.out.println("Method 2 return bitmap is null too, fuck!");
+                    Log.e("photo", "MyService, bitmap is: null");
+                    message.obj = null;
+                    break;
+                }
+//if (bitmap==null)
+//                bitmap = new ImgHelper().InputStream2Bitmap(inputStream);
+//                if (bitmap==null){
+//                    Log.e("photo", "MyService, bitmap is: null");
+//                    message.obj = null;
+//                    break;
+//                }
+                Log.e("photo", "MyService, bitmap is:" + bitmap.toString());
 //                map = new HashMap<>();
 //                map.put("photo",bitmap);
                 message.obj = bitmap;
@@ -227,8 +246,8 @@ public class MyService extends Service implements Runnable {
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->USER_REGISTER");
                 break;
-            case Task.TEACHER_POST_TEST://老师提交试题
-                STeacherPostTest sTeacherPostTest = TeacherPostTestWork.postTest(ts.getTaskParam());
+            case Task.TEACHER_POST_TEST://老师提交试题，但是没有发布
+//                STeacherPostTest sTeacherPostTest = TeaPostTestWork.postTest(ts.getTaskParam());
 //                map = new HashMap<String, Object>();
 //                map.put("_id",rgresult.get_id());
 //                map.put("result",rgresult.getResult());

@@ -3,8 +3,8 @@ package com.xinli.xinli.service;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.xinli.xinli.bean.mine.CUploadPhoto;
-import com.xinli.xinli.bean.mine.SUploadPhoto;
+import com.xinli.xinli.bean.protocol.CUploadPhoto;
+import com.xinli.xinli.bean.protocol.SUploadPhoto;
 import com.xinli.xinli.net.NetHelper;
 import com.xinli.xinli.net.SimpleCommunicate;
 import com.xinli.xinli.util.Resource;

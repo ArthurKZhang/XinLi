@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.xinli.xinli.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,17 +21,25 @@ import java.util.List;
  */
 public class RecyclerChosAdapter extends RecyclerView.Adapter<RecyclerChosAdapter.MyViewHolder2> {
 
-//    private List<String> mDatas;
-    private int count;
+    private List<String> mDatas;
+    //    private int count;
     private LayoutInflater mInflater;
     Context contex;
 
+    public void setmDatas(List<String> mDatas) {
+        this.mDatas = mDatas;
+    }
+
+    public void setContex(Context contex) {
+        this.contex = contex;
+    }
 
     public RecyclerChosAdapter(Context context, List<String> datas) {
         contex = context;
         mInflater = LayoutInflater.from(context);
-//        mDatas = datas;
-        count = 0;
+        if (datas == null) datas = new ArrayList<String>();
+        mDatas = datas;
+//        count = 0;
     }
 
     //用于点击事件回调
@@ -53,7 +62,7 @@ public class RecyclerChosAdapter extends RecyclerView.Adapter<RecyclerChosAdapte
                 Toast.LENGTH_SHORT).show();
         MyViewHolder2 holder = new MyViewHolder2(mInflater.inflate(R.layout.edit_exam_chose, parent, false));
         final int pos = holder.getLayoutPosition();
-        Toast.makeText(contex,"onCreate"+pos,Toast.LENGTH_SHORT).show();
+        Toast.makeText(contex, "onCreate" + pos, Toast.LENGTH_SHORT).show();
         return holder;
     }
 
@@ -62,12 +71,12 @@ public class RecyclerChosAdapter extends RecyclerView.Adapter<RecyclerChosAdapte
         Toast.makeText(contex, " onBindViewHolder",
                 Toast.LENGTH_SHORT).show();
         final int pos = holder.getLayoutPosition();
-        Toast.makeText(contex,"OnBind"+pos,Toast.LENGTH_SHORT).show();
+        Toast.makeText(contex, "OnBind" + pos, Toast.LENGTH_SHORT).show();
 
-        TextView num = (TextView) holder.mychoses.findViewById(R.id.edit_exam_chose_num);
+        TextView num = (TextView) holder.mychoses.findViewById(R.id.edit_quz_chose_num);
         num.setText("" + pos);
 
-        Button deleteButton = (Button) holder.mychoses.findViewById(R.id.edit_exam_chose_dele_bt);
+        Button deleteButton = (Button) holder.mychoses.findViewById(R.id.edit_quz_chose_dele_bt);
         //设置添加选项按钮的监听事件
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,21 +115,21 @@ public class RecyclerChosAdapter extends RecyclerView.Adapter<RecyclerChosAdapte
 
     @Override
     public int getItemCount() {
-//        return mDatas.size();
-        return count;
+        return mDatas.size();
+//        return count;
     }
 
 
     public void addData(int position) {
-//        mDatas.add(position, "Insert One");
+        mDatas.add(position, "Insert One");
         notifyItemInserted(position);
-        count += 1;
+//        count += 1;
     }
 
     public void removeData(int position) {
-//        mDatas.remove(position);
+        mDatas.remove(position);
         notifyItemRemoved(position);
-        count -= 1;
+//        count -= 1;
     }
 
 

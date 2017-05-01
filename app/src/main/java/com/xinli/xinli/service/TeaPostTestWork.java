@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.xinli.xinli.bean.bean.Test;
-import com.xinli.xinli.bean.mine.CTeacherPostTest;
-import com.xinli.xinli.bean.mine.STeacherPostTest;
+import com.xinli.xinli.bean.protocol.CTeacherPostTest;
+import com.xinli.xinli.bean.protocol.STeacherPostTest;
 import com.xinli.xinli.net.NetHelper;
 import com.xinli.xinli.net.SimpleCommunicate;
 import com.xinli.xinli.util.Resource;
@@ -16,12 +16,10 @@ import java.util.HashMap;
 /**
  * Created by zhangyu on 26/03/2017.
  */
-public class TeacherPostTestWork {
-    public static STeacherPostTest postTest(HashMap<String, Object> infos) {
+public class TeaPostTestWork {
+    public static STeacherPostTest postTest(CTeacherPostTest cTeacherPostTest) {
 
-        CTeacherPostTest data = new CTeacherPostTest((String) infos.get("id"), (Test) infos.get("test"));
-
-        Log.d("nettest", "CTeacherPostTest:" + data.toString());
+        Log.d("nettest", "CTeacherPostTest:" + cTeacherPostTest.toString());
 
         Gson gson = new Gson();
         Type ctype = new com.google.gson.reflect.TypeToken<CTeacherPostTest>() {
@@ -30,7 +28,7 @@ public class TeacherPostTestWork {
         }.getType();
 
 
-        String json = gson.toJson(data, ctype);
+        String json = gson.toJson(cTeacherPostTest, ctype);
 
         String url = NetHelper.createURL(Resource.ACTION_TEACHER_POST_TEST);
         Log.d("nettest", "url:" + url);

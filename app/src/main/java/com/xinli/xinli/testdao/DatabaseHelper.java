@@ -23,6 +23,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_TestI = "TestItem";
     public static final String TABLE_NAME_Recom = "Recommend";
 
+//    ---------------------------------------------------------
+
+    public static final String TABLE_UPLOAD_TEST_LIST = "uploadlist";
+
+
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -56,6 +61,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        createRecommendTable(db);
         // 即便程序修改重新运行，只要数据库已经创建过，就不会再进入这个onCreate方法
 
+        createUploadTestListTable(db);
+
+    }
+
+    /**
+     * String userName;
+     private String testName;
+     private String testId;
+     private String cachePath;
+     * @param db
+     */
+    private void createUploadTestListTable(SQLiteDatabase db) {
+        // 构建创建表的SQL语句（可以从SQLite Expert工具的DDL粘贴过来加进StringBuffer中）
+        StringBuffer sBuffer = new StringBuffer();
+
+        sBuffer.append("CREATE TABLE [" + TABLE_UPLOAD_TEST_LIST + "] (");
+        sBuffer.append("[_id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ");
+        sBuffer.append("[userName] TEXT,");
+        sBuffer.append("[testName] TEXT,");
+        sBuffer.append("[testId] TEXT,");
+        sBuffer.append("[cachePath] TEXT)");
+
+        // 执行创建表的SQL语句
+        db.execSQL(sBuffer.toString());
     }
 
     private void createRecommendTable(SQLiteDatabase db) {
