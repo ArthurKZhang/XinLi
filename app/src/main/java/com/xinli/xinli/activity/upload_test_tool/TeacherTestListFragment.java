@@ -123,6 +123,7 @@ public class TeacherTestListFragment extends Fragment implements OnStartDragList
                             //TODO 可以加上试题内容，如果是没有网络环境下编辑的呢？这个情况暂时不考虑
                             intent.putExtra("testid", u.getTestId());
                             intent.putExtra("teacherName", u.getUserName());
+                            intent.putExtra("testName", u.getTestName());
                             startActivity(intent);
                         }
                     }).show();

@@ -21,9 +21,9 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.TestListActivity" />
-        <activity android:name=".activity.DoTest" />
+        <activity android:name=".activity.DoTestAtivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".activity.MessageList" />
+        <activity android:name=".activity.MyOwnTestActivity" />
         <activity android:name=".activity.MineActivity" />
         <activity android:name=".activity.FileBrowserActivity" />
 

@@ -66,7 +66,7 @@ public class TestListActivity extends MyBaseActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putString("testURI", testLI.uri);
 
-                Intent intent = new Intent(TestListActivity.this, DoTest.class);
+                Intent intent = new Intent(TestListActivity.this, DoTestAtivity.class);
                 intent.putExtras(bundle1);
                 startActivityForResult(intent, requestCode);
 

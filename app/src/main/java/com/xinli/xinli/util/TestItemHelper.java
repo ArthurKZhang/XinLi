@@ -9,9 +9,11 @@ public class TestItemHelper {
 
 
     //单选
-    public static final int CHOOSE_ONE = 1;
+    public static final int CHOOSE_SINGLE = 1;
     //多选
     public static final int CHOOSE_MULTIPLE = 2;
+    public static final int CHOOSE_TF = 3;
+    public static final int CHOOSE_ANSWER = 4;
 
 
 }

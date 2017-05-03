@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.xinli.xinli.R;
 import com.xinli.xinli.activity.MyBaseActivity;
+import com.xinli.xinli.bean.bean.NotifyRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class AppManager {
      */
     public static String serverName = "Test";
 
+    public static List<NotifyRecord> notifys = new ArrayList<>();
 
     private AppManager() {
     }
@@ -147,7 +150,7 @@ public class AppManager {
     public MyBaseActivity getActivityByName(String name) {
         for (MyBaseActivity ia : activityStack) {
             if (ia.getClass().getName().indexOf(name) >= 0) {
-                Log.d("test", "AppManager-->getActivityByName()-->"+ia.getClass().getName()+"||"+name);
+                Log.d("test", "AppManager-->getActivityByName()-->" + ia.getClass().getName() + "||" + name);
                 return (MyBaseActivity) ia;
             }
         }
@@ -162,6 +165,7 @@ public class AppManager {
             finishAllActivity();
             ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 //            activityMgr.restartPackage(context.getPackageName());
+            context.stopService(new Intent(context, NotifyService.class));
             activityMgr.killBackgroundProcesses(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
@@ -172,6 +176,7 @@ public class AppManager {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
+
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);

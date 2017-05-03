@@ -230,7 +230,7 @@ public class FileBrowserActivity extends MyBaseActivity {
                     editor.putString("fileName",selectedFileUri);
                     boolean isSuccess = editor.commit();
                     Log.d("test","SaveUpload:*"+isSuccess+"*-"+selectedFileUri+"-to UpLoadedTest.xml");
-                    NotifyService.shouldSend2Student = true;
+//                    NotifyService.shouldSend2Student = true;
                     progressDialog.dismiss();
                 }
             }

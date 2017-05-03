@@ -280,7 +280,9 @@ public class MineActivity extends MyBaseActivity {
                 String name = bundle.getString("userName");
                 String userType = bundle.getString("userType");
                 Boolean isLogIn = bundle.getBoolean("isLogIn");
-                String photoid = bundle.getString("photo");
+                String photoid = bundle.getString("photo");//-->java.lang.Integer cannot be cast to java.lang.String
+//                at android.os.BaseBundle.getString(BaseBundle.java:921)
+//                at com.xinli.xinli.activity.MineActivity.onActivityResult(MineActivity.java:283)
 
                 //更新界面
                 if (isLogIn == true) {

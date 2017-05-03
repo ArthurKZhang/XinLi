@@ -13,9 +13,11 @@ import com.xinli.xinli.activity.MineActivity;
 import com.xinli.xinli.bean.Task;
 import com.xinli.xinli.bean.protocol.CDownloadPhoto;
 import com.xinli.xinli.bean.protocol.CLogin;
+import com.xinli.xinli.bean.protocol.CStuGetTest;
 import com.xinli.xinli.bean.protocol.SDownloadPhoto;
 import com.xinli.xinli.bean.protocol.SLogin;
 import com.xinli.xinli.bean.protocol.SRegister;
+import com.xinli.xinli.bean.protocol.SStuGetTest;
 import com.xinli.xinli.bean.protocol.STeacherPostTest;
 import com.xinli.xinli.bean.test.Artical;
 import com.xinli.xinli.bean.test.Recommend;
@@ -25,6 +27,7 @@ import com.xinli.xinli.bean.test.VF;
 import com.xinli.xinli.service.DownloadPhotoWork;
 import com.xinli.xinli.service.LoginWork;
 import com.xinli.xinli.service.RegisterWork;
+import com.xinli.xinli.service.StuGetTestWork;
 import com.xinli.xinli.service.TeaPostTestWork;
 import com.xinli.xinli.testdao.ArticalDao;
 import com.xinli.xinli.testdao.RecommendDao;
@@ -54,6 +57,11 @@ public class MyService extends Service implements Runnable {
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -145,13 +153,15 @@ public class MyService extends Service implements Runnable {
                 message.obj = map;
                 Log.d("test", "MyService-->doTask()-->VF_GET_DATA");
                 break;
-            case Task.TEST_GET_DATA:
-                TestIDao testIDao = (TestIDao) ts.getTaskParam().get("tidb");
-                List<TestI> testIs = testIDao.queryByURI((String) ts.getTaskParam().get("uri"));
+            case Task.TEST_GET_DATA://学生用户做题，获得测试题
+                String testid = (String) ts.getTaskParam().get("testid");
+                SStuGetTest s = StuGetTestWork.getTest(new CStuGetTest(testid));
+                String testAsJson = s.getTestAsJson();
+
                 map = new HashMap<String, Object>();
-                map.put("testIs", testIs);
+                map.put("testAsJson", testAsJson);
                 message.obj = map;
-                Log.d("test", "MyService-->doTask()-->TEST_GET_DATA");
+                Log.d("test", "MyService-->doTask()-->TEST_GET_DATA finished");
                 break;
             case Task.ARTICAL_GET_DATA:
                 ArticalDao articalDao = (ArticalDao) ts.getTaskParam().get("articaldb");
@@ -285,8 +295,8 @@ public class MyService extends Service implements Runnable {
 //                    Log.d("test", "****"+AppManager.getAppManager().getAllActivity().toString());
                     AppManager.getAppManager().getActivityByName("MainActivity").refresh(msg.obj);
                     break;
-                case Task.TEST_GET_DATA:
-                    AppManager.getAppManager().getActivityByName("DoTest").refresh(msg.obj);
+                case Task.TEST_GET_DATA://学生用户做题，获得测试题
+                    AppManager.getAppManager().getActivityByName("DoTestAtivity").refresh(msg.obj);
                     break;
                 case Task.ARTICAL_GET_DATA:
                     AppManager.getAppManager().getActivityByName("ArticalActivity").refresh(msg.obj);

@@ -12,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -173,7 +172,7 @@ public class MainActivity extends MyBaseActivity {
             String uri = (String) ((LinearLayout)v).getTag(R.id.tag_uri);
             Bundle bundle = new Bundle();
             bundle.putString("testURI",uri);
-            Intent intent = new Intent(MainActivity.this, DoTest.class);
+            Intent intent = new Intent(MainActivity.this, DoTestAtivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent,requestCode);
         }

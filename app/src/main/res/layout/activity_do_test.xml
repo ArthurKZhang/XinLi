@@ -19,22 +19,32 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/bt_next"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="next" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/bt_previous"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="previous" />
+        <Button
+            android:id="@+id/bt_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:text="上一题" />
+
+        <Button
+            android:id="@+id/bt_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="180dp"
+            android:text="下一题" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SUBMIT" />
+        android:text="提交" />
 
 </LinearLayout>

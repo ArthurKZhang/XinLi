@@ -32,6 +32,7 @@ public class PublishTestActivity extends MyBaseActivity {
 
     private String testid;
     private String teacherName;
+    private String testName;
     private int sy, sm, sd, ey, em, ed;
     int myear;
     int mmonth;
@@ -64,6 +65,7 @@ public class PublishTestActivity extends MyBaseActivity {
         initView();
         testid = getIntent().getStringExtra("testid");
         teacherName = getIntent().getStringExtra("teacherName");
+        testName = getIntent().getStringExtra("testName");
     }
 
     private View.OnClickListener bt_publishListener = new View.OnClickListener() {
@@ -82,7 +84,7 @@ public class PublishTestActivity extends MyBaseActivity {
 
                 @Override
                 protected SPublishTest doInBackground(Void... params) {
-                    CPublishTest cPublishTest = new CPublishTest(testid, teacherName, institution, enrollYear, sDate, eDate);
+                    CPublishTest cPublishTest = new CPublishTest(testid, testName,teacherName, institution, enrollYear, sDate, eDate);
                     SPublishTest sPublishTest = TeaPublishTestWork.publish(cPublishTest);
                     return sPublishTest;
                 }

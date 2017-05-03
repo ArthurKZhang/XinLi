@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class CPublishTest {
     private String testid;
+    private String testName;
     private String teacherName;
     private String userInstitution;
     private String enrollYear;
@@ -17,6 +18,7 @@ public class CPublishTest {
     public String toString() {
         return "CPublishTest{" +
                 "testid='" + testid + '\'' +
+                ", testName='" + testName + '\'' +
                 ", teacherName='" + teacherName + '\'' +
                 ", userInstitution='" + userInstitution + '\'' +
                 ", enrollYear='" + enrollYear + '\'' +
@@ -31,6 +33,14 @@ public class CPublishTest {
 
     public void setTestid(String testid) {
         this.testid = testid;
+    }
+
+    public String getTestName() {
+        return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
     }
 
     public String getTeacherName() {
@@ -73,9 +83,10 @@ public class CPublishTest {
         this.eDate = eDate;
     }
 
-    public CPublishTest(String testid, String teacherName, String userInstitution, String enrollYear, Date sDate, Date eDate) {
+    public CPublishTest(String testid, String testName, String teacherName, String userInstitution, String enrollYear, Date sDate, Date eDate) {
 
         this.testid = testid;
+        this.testName = testName;
         this.teacherName = teacherName;
         this.userInstitution = userInstitution;
         this.enrollYear = enrollYear;

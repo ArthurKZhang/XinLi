@@ -15,7 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.TabHost;
 
 import com.xinli.xinli.activity.MainActivity;
-import com.xinli.xinli.activity.MessageList;
+import com.xinli.xinli.activity.MyOwnTestActivity;
 import com.xinli.xinli.activity.MineActivity;
 import com.xinli.xinli.util.AppManager;
 
@@ -34,7 +34,7 @@ public class HomeActivity extends TabActivity {
         tabHost = getTabHost();
 //        tabHost.setup();
         tabHost.addTab(tabHost.newTabSpec("test").setIndicator("Test").setContent(new Intent(this, MainActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("message").setIndicator("Message").setContent(new Intent(this, MessageList.class)));
+        tabHost.addTab(tabHost.newTabSpec("message").setIndicator("Message").setContent(new Intent(this, MyOwnTestActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("mine").setIndicator("Mine").setContent(new Intent(this, MineActivity.class)));
         tabHost.setCurrentTab(0);
 

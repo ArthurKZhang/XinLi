@@ -58,7 +58,7 @@ public class StartActivity extends MyBaseActivity {
                 }
                 Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                 startActivity(intent);
-                AppManager.getAppManager().finishActivity(StartActivity.this);
+//                AppManager.getAppManager().finishActivity(StartActivity.this);
             }
         });
 

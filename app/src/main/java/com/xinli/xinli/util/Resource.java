@@ -15,6 +15,10 @@ public class Resource {
     public static final String ACTION_PUBLISH_TEST = "publish.action";
     public static final String ACTION_TEA_TEST_CACHE = "downcache.action";
 
+    public static final String ACTION_STU_GET_NOTIFY = "stugetnotify.action";
+    public static final String ACTION_STU_GET_TEST = "stugettest.action";
+    public static final String ACTION_STU_HAND_RESULT = "stuhandresult.action";
+
 
 
     //file resource
