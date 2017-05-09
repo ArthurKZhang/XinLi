@@ -35,8 +35,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Login Please"
-                android:textSize="20dp" />
+                android:text="点击头像登陆"
+                android:textSize="15dp" />
 
             <ImageButton
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border_normal"
-                android:text="register"
+                android:text="用户注册"
                 android:visibility="visible" />
 
             <Button
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border_normal"
-                android:text="Logout"
+                android:text="用户退出"
                 android:visibility="gone" />
 
             <Button
@@ -69,8 +69,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border_normal"
-                android:text="Upload Test" />
-            <!--android:visibility="gone"-->
+                android:text="上传测试题" />
+
+            <Button
+                android:id="@+id/bt_downloadTestResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border_normal"
+                android:text="下载测试题结果" />
 
         </LinearLayout>
 
@@ -147,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_exit_button"
-                android:text="Exit App" />
+                android:text="退出应用" />
         </LinearLayout>
 
 

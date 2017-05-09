@@ -19,6 +19,8 @@ public class Resource {
     public static final String ACTION_STU_GET_TEST = "stugettest.action";
     public static final String ACTION_STU_HAND_RESULT = "stuhandresult.action";
 
+    public static final String ACTION_TEA_TEST_RESULT_ITEM = "teatestresultitem.action";
+
 
 
     //file resource

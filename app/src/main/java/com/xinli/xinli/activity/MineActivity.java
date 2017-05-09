@@ -62,6 +62,7 @@ public class MineActivity extends MyBaseActivity {
     private final int REQUEST_PHOTO_CORP = 5;
     private final int REQUEST_REGISTER = 6;
 
+    final int RESULT_CODE = 11;
     LinearLayout LL_UserPart;
     /**
      * 在LL_UserPart中
@@ -73,6 +74,7 @@ public class MineActivity extends MyBaseActivity {
     TextView tv_UserName;
     Button bt_testHistory, bt_notificationSetting, bt_exitApp;
     Button bt_logout, bt_upload, bt_register;
+    Button bt_downloadTestResult;
     /**
      * // sd路径
      */
@@ -131,7 +133,11 @@ public class MineActivity extends MyBaseActivity {
 
         bt_register = (Button) findViewById(R.id.bt_register);
 
+        bt_downloadTestResult = (Button) findViewById(R.id.bt_downloadTestResult);
+
         MyOnClickListener listener = new MyOnClickListener();
+
+        bt_downloadTestResult.setOnClickListener(listener);
 
         IB_UserPhoto.setOnClickListener(listener);
         bt_testHistory.setOnClickListener(listener);
@@ -266,6 +272,10 @@ public class MineActivity extends MyBaseActivity {
                     intent = new Intent(MineActivity.this, RegisterActivity.class);
                     MineActivity.this.startActivityForResult(intent, REQUEST_REGISTER);
                     break;
+                case R.id.bt_downloadTestResult:
+                    intent = new Intent(MineActivity.this, FileBrowserActivity.class);
+                    MineActivity.this.startActivity(intent);
+                    break;
             }
 
 
@@ -335,10 +345,10 @@ public class MineActivity extends MyBaseActivity {
 //                                try {
 //                                    cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
 //                                            , new String(headbytes, "UTF-8"));
-                                    cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
-                                            , headString);
-                                    Log.e("UploadPhoto", "userName:" + AppManager.getAppManager().userName);
-                                    Log.e("UploadPhoto", "photo:" + cUploadPhoto.getPhoto());
+                                cUploadPhoto = new CUploadPhoto(AppManager.getAppManager().userName
+                                        , headString);
+                                Log.e("UploadPhoto", "userName:" + AppManager.getAppManager().userName);
+                                Log.e("UploadPhoto", "photo:" + cUploadPhoto.getPhoto());
 //                                } catch (UnsupportedEncodingException e) {
 //                                    e.printStackTrace();
 //                                }
@@ -405,6 +415,12 @@ public class MineActivity extends MyBaseActivity {
                         addUploadTestButtons();
                     }
                 }
+                break;
+            case RESULT_CODE:
+                Bundle b = data.getExtras();
+                String DirUri = b.getString("DirUri");
+
+                Toast.makeText(MineActivity.this, DirUri, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -527,7 +543,7 @@ public class MineActivity extends MyBaseActivity {
      * @param mBitmap
      */
     public void savePicToSD(Bitmap mBitmap) {
-        if (mBitmap==null) return;
+        if (mBitmap == null) return;
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return;

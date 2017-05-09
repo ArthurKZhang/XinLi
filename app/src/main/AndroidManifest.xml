@@ -54,7 +54,8 @@
             android:name=".activity.TeacherTestListActivity"
             android:label="@string/title_activity_upload_test"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.PublishTestActivity"></activity>
+        <activity android:name=".activity.PublishTestActivity" />
+        <activity android:name=".activity.TeaTestResultListActivity"></activity>
     </application>
 
 </manifest>

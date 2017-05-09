@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.xinli.xinli.R;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class ArticalActivity extends MyBaseActivity {
 
-    TextView textView;
+    WebView webView;
     String uri;
 
     @Override
@@ -27,35 +28,37 @@ public class ArticalActivity extends MyBaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_artical);
 
-        textView = (TextView) this.findViewById(R.id.tv_artical);
+        webView = (WebView) this.findViewById(R.id.wv_artical);
 
         Bundle bundle = this.getIntent().getExtras();
         uri = bundle.getString("uri");
 
-        loadArtical();
+        webView.loadUrl(uri);
+//        loadArtical();
 
     }
 
     private void loadArtical() {
-        ArticalDao articalDao = new ArticalDao(this);
-        HashMap<String, Object> hm = new HashMap<String, Object>();
-        hm.put("articaldb", articalDao);
-        hm.put("uri", uri);
-        Task ts = new Task(Task.ARTICAL_GET_DATA, hm);
-        Log.d("test", "ArticalActivity-->loadArtical"+uri);
-        MyService.newTask(ts);
+//        ArticalDao articalDao = new ArticalDao(this);
+//        HashMap<String, Object> hm = new HashMap<String, Object>();
+//        hm.put("articaldb", articalDao);
+//        hm.put("uri", uri);
+//        Task ts = new Task(Task.ARTICAL_GET_DATA, hm);
+//        Log.d("test", "ArticalActivity-->loadArtical"+uri);
+//        MyService.newTask(ts);
+
     }
 
     @Override
     public void refresh(Object... param) {
-        Map<String, Object> map = (Map<String, Object>) param[0];
-        Artical artical = (Artical) map.get("artical");
-        if (artical == null) {
-            Log.e("error", "can't find artical from " + uri);
-            textView.setText("nothing in " + uri);
-        }else {
-            textView.setText(artical.text);
-        }
+//        Map<String, Object> map = (Map<String, Object>) param[0];
+//        Artical artical = (Artical) map.get("artical");
+//        if (artical == null) {
+//            Log.e("error", "can't find artical from " + uri);
+//            textView.setText("nothing in " + uri);
+//        }else {
+//            textView.setText(artical.text);
+//        }
     }
 
     @Override

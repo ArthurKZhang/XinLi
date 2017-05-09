@@ -40,7 +40,7 @@ public class MainActivity extends MyBaseActivity {
     private Button button2;
     private Button button3;
     ViewFlipper viewFlipper;
-    LinearLayout ll1,ll2,ll3,ll4;
+    LinearLayout ll1, ll2, ll3, ll4;
 
     int requestCode = 1;
 
@@ -62,7 +62,9 @@ public class MainActivity extends MyBaseActivity {
                 Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
         TextView textView = (TextView) mActionBarView.findViewById(R.id.tv_actionbar);
-        textView.setText("Test Yard");  textView.setTextColor(Color.WHITE); textView.setTextSize(AppManager.dip2px(this,10));
+        textView.setText("Test Yard");
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(AppManager.dip2px(this, 10));
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setCustomView(mActionBarView, lp);
         actionBar.setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -78,14 +80,14 @@ public class MainActivity extends MyBaseActivity {
         button2 = (Button) findViewById(R.id.category2);
         button3 = (Button) findViewById(R.id.category3);
 
-        button1.setTag(R.id.tag_category,"love");
-        button2.setTag(R.id.tag_category,"work");
-        button3.setTag(R.id.tag_category,"family");
+        button1.setTag(R.id.tag_category, "love");
+        button2.setTag(R.id.tag_category, "work");
+        button3.setTag(R.id.tag_category, "family");
 
-        ll1 = (LinearLayout)findViewById(R.id.recom1);
-        ll2 = (LinearLayout)findViewById(R.id.recom2);
-        ll3 = (LinearLayout)findViewById(R.id.recom3);
-        ll4 = (LinearLayout)findViewById(R.id.recom4);
+        ll1 = (LinearLayout) findViewById(R.id.recom1);
+        ll2 = (LinearLayout) findViewById(R.id.recom2);
+        ll3 = (LinearLayout) findViewById(R.id.recom3);
+        ll4 = (LinearLayout) findViewById(R.id.recom4);
 
         /*
         * 为ViewFlipper去添加动画效果
@@ -96,46 +98,20 @@ public class MainActivity extends MyBaseActivity {
         viewFlipper.setFlipInterval(6000);
         viewFlipper.startFlipping();
 
-
-//        viewFlipper.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                float startX = 0;
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        startX = event.getX();
-//                        break;
-//                    case MotionEvent.ACTION_MOVE://判断向左滑动还是向右滑动
-//                        if (event.getX() - startX > 100) {
-//                            viewFlipper.setInAnimation(MainActivity.this, R.animator.right_in);
-//                            viewFlipper.setOutAnimation(MainActivity.this, R.animator.right_out);
-//                            viewFlipper.showPrevious();
-//                        } else if (startX - event.getX() > 100) {
-//                            viewFlipper.setInAnimation(MainActivity.this, R.animator.left_in);
-//                            viewFlipper.setOutAnimation(MainActivity.this, R.animator.left_out);
-//                            viewFlipper.showNext();
-//                        }
-//                    case MotionEvent.ACTION_UP:
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
-
         viewFlipper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String uri = (String) viewFlipper.getCurrentView().getTag(R.id.tag_uri);
-                if(uri !=null){
+                if (uri != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("uri", uri);
                     Intent intent = new Intent(MainActivity.this, ArticalActivity.class);
                     intent.putExtras(bundle);
-                    Log.d("test","iewFlipper.getCurrentView().setOnClickListener-->"+uri);
+                    Log.d("test", "iewFlipper.getCurrentView().setOnClickListener-->" + uri);
                     MainActivity.this.startActivity(intent);
-                }else{
-                    Log.e("test","uri is null");
-                    Toast.makeText(MainActivity.this,"uri is null",Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e("test", "uri is null");
+                    Toast.makeText(MainActivity.this, "uri is null", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -165,24 +141,24 @@ public class MainActivity extends MyBaseActivity {
         }
     }
 
-    class MyLLClickListener implements View.OnClickListener{
+    class MyLLClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            String uri = (String) ((LinearLayout)v).getTag(R.id.tag_uri);
+            String uri = (String) ((LinearLayout) v).getTag(R.id.tag_uri);
             Bundle bundle = new Bundle();
-            bundle.putString("testURI",uri);
+            bundle.putString("testURI", uri);
             Intent intent = new Intent(MainActivity.this, DoTestAtivity.class);
             intent.putExtras(bundle);
-            startActivityForResult(intent,requestCode);
+            startActivityForResult(intent, requestCode);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == this.requestCode){
+        if (requestCode == this.requestCode) {
             String returnString = data.getStringExtra("DoTestReturn");
-            Toast.makeText(this,returnString,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, returnString, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,12 +168,12 @@ public class MainActivity extends MyBaseActivity {
         return imageView;
     }
 
-    private void loadVFsAndRecommends(){
+    private void loadVFsAndRecommends() {
         VFDao vfDao = new VFDao(MainActivity.this);
         RecommendDao recommendDao = new RecommendDao(MainActivity.this);
         HashMap<String, Object> hm = new HashMap<String, Object>();
-        hm.put("vfdb",vfDao);
-        hm.put("rdb",recommendDao);
+        hm.put("vfdb", vfDao);
+        hm.put("rdb", recommendDao);
         Task ts = new Task(Task.VF_GET_DATA, hm);
         Log.d("test", "MainActivity-->loadVFsAndRecommends");
         MyService.newTask(ts);
@@ -218,22 +194,26 @@ public class MainActivity extends MyBaseActivity {
 
     /**
      * refresh ViewFlipper Component,contains three images
+     *
      * @param vfs
      */
-    private void refreshVF(List<VF> vfs){
-
+    private void refreshVF(List<VF> vfs) {
+        String[] urls = {"http://xl.wenkang.cn/ajk/xlcs/2131015.html",
+                "http://xl.wenkang.cn/ajk/xlzs/2131034.html",
+                "http://xl.wenkang.cn/ahz/qcq/2130980.html"};
         for (int i = 0; i < vfs.size(); i++) {
             ImageView imageView = getImageView(vfs.get(i).img);
-            imageView.setTag(R.id.tag_uri,vfs.get(i).uri);
+            imageView.setTag(R.id.tag_uri, urls[i]);
             viewFlipper.addView(imageView);
         }
     }
 
     /**
      * refresh Recommend component, contains four parts
+     *
      * @param rs
      */
-    private void refreshRecommend(List<Recommend> rs){
+    private void refreshRecommend(List<Recommend> rs) {
 //        ll1 = (LinearLayout)findViewById(R.id.recom1);
         ll1.setTag(R.id.tag_uri, rs.get(0).uri);
         ImageView im1 = (ImageView) ll1.findViewById(R.id.recom1_img);
@@ -289,7 +269,7 @@ public class MainActivity extends MyBaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_settings);
         item.setVisible(false);
-        item=menu.findItem(R.id.action_refresh);
+        item = menu.findItem(R.id.action_refresh);
         item.setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
